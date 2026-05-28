@@ -3,184 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messenger-flash - Cotizador Tucumán</title>
+    <title>Messenger-flash</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            display: flex; justify-content: center; align-items: flex-start;
-            min-height: 100vh; padding: 16px;
-        }
-        .app-container {
-            width: 100%; max-width: 410px; background: #ffffff !important;
-            border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            padding: 24px; display: flex; flex-direction: column; gap: 20px;
-        }
-        .header { text-align: center; }
-        .section-title {
-            font-size: 22px; font-weight: 800; color: #0f172a;
-            padding-bottom: 10px; border-bottom: 2px solid #f1f5f9; margin-bottom: 10px;
-        }
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
-        .form-group label {
-            font-size: 12px; font-weight: 700; color: #64748b;
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
-        .input-text {
-            width: 100%; padding: 14px; font-size: 16px; color: #0f172a;
-            background-color: #f8fafc; border: 2px solid #e2e8f0;
-            border-radius: 12px; outline: none; font-weight: 600; transition: all 0.2s;
-        }
-        .input-text:focus {
-            border-color: #3b82f6; background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
-        }
-        #destino { border: 2px solid #ffedd5; background-color: #fff7ed; color: #c2410c; }
-        #destino:focus { border-color: #ea580c; background-color: #ffffff; box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.15); }
-        
-        .btn-action-blue {
-            width: 100%; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-            color: #ffffff !important; font-size: 16px; font-weight: 700;
-            padding: 15px; border: none; border-radius: 12px;
-            cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-            text-align: center; transition: transform 0.1s;
-        }
-        .btn-action-blue:active { transform: scale(0.98); }
-        .btn-whatsapp { background: linear-gradient(135deg, #25D366 0%, #128C7E 100%) !important; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3); }
-        
-        .price-display {
-            background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 16px;
-            padding: 20px; text-align: center; margin: 10px 0;
-        }
-        .price-label { font-size: 14px; color: #64748b; font-weight: 600; margin-bottom: 5px; }
-        .price-value { font-size: 36px; font-weight: 800; color: #0f172a; letter-spacing: -1px; }
-        
-        .status-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
-            margin-top: 10px; background: #e2e8f0; color: #475569;
-        }
-        .status-badge.active { background: #fee2e2; color: #dc2626; }
-        .status-badge.warning { background: #fef3c7; color: #d97706; }
-        .status-badge.success { background: #dcfce7; color: #16a34a; }
-        .info-text { font-size: 12px; color: #94a3b8; text-align: center; margin-top: 10px; }
+        body { background: #0f172a; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .app { background: #fff; width: 90%; max-width: 400px; padding: 20px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        h1 { text-align: center; color: #333; margin-bottom: 20px; }
+        label { display: block; margin: 10px 0 5px; font-weight: bold; color: #555; }
+        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        #precio-box { background: #f0f9ff; border: 2px solid #0ea5e9; padding: 15px; text-align: center; border-radius: 10px; margin: 20px 0; }
+        #precio { font-size: 32px; font-weight: bold; color: #0284c7; }
+        .btn { width: 100%; padding: 15px; background: #2563eb; color: white; border: none; border-radius: 8px; font-size: 18px; cursor: pointer; font-weight: bold; }
+        .btn:hover { background: #1d4ed8; }
+        .status { font-size: 12px; color: #666; margin-top: 5px; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <div class="header">
-            <h1 class="section-title">⚡ Messenger Flash</h1>
-            <p style="color: #64748b; font-size: 14px;">Cotizador Inteligente Tucumán</p>
-        </div>
-
-        <div class="form-group">
-            <label for="origen">📍 Origen (Retiro)</label>
-            <input type="text" id="origen" class="input-text" placeholder="Ej: Yerba Buena, Aconquija...">
-        </div>
-
-        <div class="form-group">
-            <label for="destino">🏁 Destino (Entrega)</label>
-            <input type="text" id="destino" class="input-text" placeholder="Ej: Centro, San Javier...">
-        </div>
-
-        <div class="price-display">
-            <div class="price-label">COSTO ESTIMADO</div>
-            <div class="price-value" id="txtPrecio">$0</div>
-            <div id="statusContainer"></div>
-        </div>
-
-        <button id="btnWhatsApp" class="btn-action-blue btn-whatsapp">
-            📱 Enviar Pedido a WhatsApp
-        </button>
-        
-        <p class="info-text">*Los precios se ajustan automáticamente por demanda, clima y zona.</p>
+<div class="app">
+    <h1>⚡ Messenger Flash</h1>
+    
+    <label>📍 Origen:</label>
+    <input type="text" id="origen" placeholder="Ej: Yerba Buena">
+    
+    <label>🏁 Destino:</label>
+    <input type="text" id="destino" placeholder="Ej: Centro">
+    
+    <div id="precio-box">
+        <div id="precio">$0</div>
+        <div id="status" class="status">Esperando datos...</div>
     </div>
+    
+    <button class="btn" onclick="enviarPedido()">📱 Enviar a WhatsApp</button>
+</div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const NUMERO_WHATSAPP = "5493815727447"; 
-            const TARIFA_BASE = 1000;       
-            const PRECIO_POR_KM = 800;     
-            const EXTRA_ZONA_ROJA = 500;    
+<script>
+    const ORIGEN = document.getElementById('origen');
+    const DESTINO = document.getElementById('destino');
+    const PRECIO = document.getElementById('precio');
+    const STATUS = document.getElementById('status');
+    const NUMERO = "5493815727447";
+    
+    // Configuración de precios
+    const BASE = 1000;
+    const KM = 800;
+    const EXTRA_ZONA = 500;
 
-            const origenInput = document.getElementById("origen");
-            const destinoInput = document.getElementById("destino");
-            const txtPrecio = document.getElementById("txtPrecio");
-            const btnWhatsApp = document.getElementById("btnWhatsApp");
-            const statusContainer = document.getElementById("statusContainer");
+    function calcular() {
+        let o = ORIGEN.value.trim().toLowerCase();
+        let d = DESTINO.value.trim().toLowerCase();
+        
+        if (!o || !d) {
+            PRECIO.innerText = "$0";
+            STATUS.innerText = "Ingresa origen y destino";
+            return;
+        }
 
-            let precioFinalCalculado = 0;
+        // 1. Calcular distancia (simulada)
+        let km = 3.5; // Base
+        if (o.includes("aconquija") && d.includes("centro")) km = 8.2;
+        else if (o.includes("banda") || d.includes("banda")) km = 6.5;
+        
+        let costo = BASE + (km * KM);
 
-            function estimarKilometros(orig, dest) {
-                const texto = (orig + " " + dest).toLowerCase().trim();
-                if (!orig || !dest) return 0;
-                if (texto.includes("aconquija") && (texto.includes("solano vera") || texto.includes("solanovera") || texto.includes("peron") || texto.includes("fanzolato"))) return 4.5;
-                if ((texto.includes("aconquija") || texto.includes("peron") || texto.includes("yerba buena")) && (texto.includes("roca") || texto.includes("centro") || texto.includes("jujuy") || texto.includes("uruguay") || texto.includes("alem") || texto.includes("avenida roca"))) return 8.2;
-                if (texto.includes("jujuy") && texto.includes("uruguay")) return 2.7;
-                if (texto.includes("banda") || texto.includes("talitas") || texto.includes("alderetes")) return 6.5;
-                return 3.5;
-            }
+        // 2. Factores Dinámicos Automáticos
+        let msg = "";
+        let mult = 1;
 
-            function esZonaRoja(orig, dest) {
-                const texto = (orig + " " + dest).toLowerCase();
-                const zonasRojas = ["san javier", "banda", "talitas", "aldelertes", "tafí viejo", "los pilares", "el mangrullo"];
-                return zonasRojas.some(zona => texto.includes(zona));
-            }
+        // Horario Nocturno (22:00 - 06:00)
+        let hora = new Date().getHours();
+        if (hora >= 22 || hora < 6) {
+            mult *= 1.3;
+            msg += "🌙 Noche ";
+        }
 
-            function obtenerFactoresDinamicos() {
-                const now = new Date();
-                const hora = now.getHours();
-                const dia = now.getDay();
-                let factores = { esNoche: false, esLluvia: false, esAltaDemanda: false, esZonaRoja: false };
-                if (hora >= 22 || hora < 6) factores.esNoche = true;
-                const esFinDeSemana = (dia === 0 || dia === 6);
-                const esHoraPunta = (hora >= 18 && hora < 22);
-                if (esFinDeSemana || esHoraPunta || Math.random() < 0.3) {
-                    factores.esLluvia = true;
-                    factores.esAltaDemanda = true;
-                }
-                return factores;
-            }
+        // Zona Roja (Ejemplo: San Javier, Banda)
+        if (o.includes("san javier") || d.includes("san javier") || o.includes("banda") || d.includes("banda")) {
+            costo += EXTRA_ZONA;
+            msg += "⚠️ Zona Riesgo ";
+        }
 
-            function calcularTarifaDinamica() {
-                const origen = origenInput.value.trim();
-                const destino = destinoInput.value.trim();
-                statusContainer.innerHTML = "";
+        // Demanda Aleatoria (Simulación)
+        if (Math.random() > 0.7) {
+            mult *= 1.5;
+            msg += "🌧️ Alta Demanda";
+        }
 
-                if (!origen || !destino) {
-                    txtPrecio.textContent = "$0";
-                    precioFinalCalculado = 0;
-                    return;
-                }
+        let final = Math.round(costo * mult);
+        PRECIO.innerText = "$" + final;
+        STATUS.innerText = msg || "✅ Tarifa Normal";
+    }
 
-                const kilometros = estimarKilometros(origen, destino);
-                let costoSubtotal = TARIFA_BASE + (kilometros * PRECIO_POR_KM);
-                const factores = obtenerFactoresDinamicos();
-                factores.esZonaRoja = esZonaRoja(origen, destino);
+    function enviarPedido() {
+        let o = ORIGEN.value;
+        let d = DESTINO.value;
+        let p = PRECIO.innerText;
+        let s = STATUS.innerText;
+        
+        if(!o || !d) { alert("Faltan datos"); return; }
+        
+        let msg = `*PEDIDO MESSENGER-FLASH*\n📍 Origen: ${o}\n🏁 Destino: ${d}\n💰 Costo: ${p}\n📊 Estado: ${s}\n\nConfirmar pedido?`;
+        window.open(`https://wa.me/${NUMERO}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
 
-                let multiplicador = 1.0;
-                let mensajesEstado = [];
+    ORIGEN.addEventListener('input', calcular);
+    DESTINO.addEventListener('input', calcular);
+</script>
 
-                if (factores.esNoche) {
-                    multiplicador += 0.30;
-                    mensajesEstado.push({ text: "🌙 Nocturno", type: "warning" });
-                }
-                if (factores.esLluvia || factores.esAltaDemanda) {
-                    multiplicador += 0.50;
-                    mensajesEstado.push({ text: "🌧️ Alta Demanda", type: "active" });
-                }
-                if (factores.esZonaRoja) {
-                    costoSubtotal += EXTRA_ZONA_ROJA;
-                    mensajesEstado.push({ text: "⚠️ Zona Riesgo", type: "active" });
-                }
-
-                let calculo = costoSubtotal * multiplicador;
-                precioFinalCalculado = Math.round(calculo / 50) * 50;
-                if (precioFinalCalculado < TARIFA_BASE) precioFinalCalculado = TARIFA_BASE;
-
-                txtPrecio.textContent = `$${precioFinalCalculado}`;
-
-                if (mensajesEstado.length > 0) {
-                    mensajesEstado.forEach(msg
+</body>
+</html>
