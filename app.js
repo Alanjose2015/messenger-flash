@@ -1,8 +1,7 @@
 // Constantes de configuración para la tarifa
 const TARIFA_BASE = 500;
 const PRECIO_POR_CUADRA = 50; 
-// Tu número de WhatsApp corregido sin el símbolo '+' para que funcione el link
-const TELEFONO_WHATSAPP = "5493815727447"; 
+const TELEFONO_WHATSAPP = "5493815727447"; // Su número configurado sin el símbolo '+'
 
 // Elementos del DOM
 const inputOrigen = document.getElementById('origen');
@@ -25,10 +24,11 @@ function calcularCosto() {
     }
 
     // Simulación: Genera un costo aleatorio basado en una tarifa base
+    // En producción, aquí integrarías la API de Google Maps Matrix
     const cuadrasEstimadas = Math.floor(Math.random() * 25) + 5; 
     precioCalculado = TARIFA_BASE + (cuadrasEstimadas * PRECIO_POR_CUADRA);
 
-    // Actualiza el precio en la interfaz
+    // Actualiza el precio en la interfaz con formato de moneda
     txtPrecio.textContent = `$${precioCalculado}`;
 }
 
@@ -48,7 +48,7 @@ function enviarWhatsApp() {
     }
 
     // Estructura del mensaje para el operador de la base
-    const mensaje = `¡Hola Messenger-flash! 🏍️💨\n\n` +
+    const mensaje = `Olá Messenger-flash! 🏍️💨\n\n` +
                     `Quiero solicitar un envío con los siguientes detalles:\n` +
                     `📍 *Origen:* ${origen}\n` +
                     `🏁 *Destino:* ${destino}\n` +
@@ -58,8 +58,8 @@ function enviarWhatsApp() {
     // Codifica el texto para que sea válido en una URL
     const mensajeCodificado = encodeURIComponent(mensaje);
     
-    // Crea el enlace final de WhatsApp (con el número limpio)
-    const urlWhatsApp = `https://whatsapp.com{TELEFONO_WHATSAPP}&text=${mensajeCodificado}`;
+    // Crea el enlace final de WhatsApp
+    const urlWhatsApp = `https://wa.me{TELEFONO_WHATSAPP}?text=${mensajeCodificado}`;
 
     // Abre WhatsApp en una nueva pestaña
     window.open(urlWhatsApp, '_blank');
