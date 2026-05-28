@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MESSENGER FLASH - Cadetería</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>MESSENGER FLASH</h1>
+        <p>Cadetería Express - San Miguel de Tucumán</p>
+    </header>
+
+    <main class="app-contenedor">
+        <!-- Detalles del Envío -->
+        <section class="tarjeta-formulario">
+            <h2>Detalles del Envío</h2>
+            <div class="grupo-campo">
+                <label for="origen">Dirección de Origen (Retiro):</label>
+                <input type="text" id="origen" placeholder="Ej: Uruguay 4300, Tucumán" value="Uruguay 4300">
+            </div>
+            <div class="grupo-campo">
+                <label for="destino">Dirección de Destino (Entrega):</label>
+                <input type="text" id="destino" placeholder="Ej: Barrio Alejandro Heredia, Tucumán" value="Barrio Alejandro Heredia">
+            </div>
+            <button id="btn-calcular-manual" style="width:100%; background-color:#3b82f6; color:white; border:none; padding:11px; border-radius:8px; font-weight:bold; margin-top:10px; font-size:14px; cursor:pointer;">⚡ Calcular Costo Ahora</button>
+        </section>
+
+        <!-- Información de Operación -->
+        <section class="tarjeta-formulario tarjeta-pago">
+            <h2>💳 Coordinación de Operación</h2>
+            <p class="instruccion-pago">¡Solicitar información de pago en la base de operaciones al enviar el pedido.</p>
+        </section>
+
+        <!-- Tarifa y Acción -->
+        <section class="resumen-tarifa">
+            <h3>Costo Estimado</h3>
+            <div id="precioEstimado">$0</div>
+            <p class="nota">*El precio final puede variar según la distancia real recorrida.</p>
+            <button class="btn-solicitar" id="btn-whatsapp">🏍 Solicitar Cadete y Pagar por WhatsApp</button>
+        </section>
+    </main>
+
+    <footer>
+        <div class="marca-agua-logo">
+            <div class="icono-logo">⚡</div>
+            <div class="texto-logo">
+                <h3>FLASH EXPRESS</h3>
+                <p>Sistema de Mensajería</p>
+            </div>
+        </div>
+        <a href="mailto:soporte@flashexpress.com" class="btn-correo">Contactar Soporte Técnico</a>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
