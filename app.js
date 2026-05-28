@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const NUMERO_WHATSAPP = "5493815727447"; // ⚠️ REEMPLAZÁ CON TU TELÉFONO REAL
 
     // 💰 MATRIZ DE TARIFAS EQUILIBRADAS ACTUALIZADAS
-    const TARIFA_BASE = 750;       // Costo mínimo inicial por viaje
-    const PRECIO_POR_KM = 600;     // Precio por kilómetro recorrido
+    const TARIFA_BASE = 1000;       // Costo mínimo inicial por viaje
+    const PRECIO_POR_KM = 800;     // Precio por kilómetro recorrido
 
     const origenInput = document.getElementById("origen");
     const destinoInput = document.getElementById("destino");
