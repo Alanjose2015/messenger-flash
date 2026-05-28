@@ -1,113 +1,134 @@
-// CONFIGURACIÓN DE TU NEGOCIO
-const TELEFONO_KDT = "5493815555555"; // Pon aquí el número real de tu cadetería
-const PRECIO_BASE = 400;              // Precio base por salir
-const PRECIO_POR_KM = 250;            // Precio por kilómetro en Tucumán
+/**
+ * REPOSITORIO: Messenger-flash
+ * DESCRIPCIÓN: Cotizador en tiempo real basado en kilometraje con bloqueo de campos vacíos.
+ */
 
-function activarConfiguracionApp() {
-    const configuracionJSON = {
-        "short_name": "Flash Messenger",
-        "name": "MESSENGER FLASH - Cadetería",
-        "icons": [{
-            "src": "https://flaticon.com",
-            "type": "image/png",
-            "sizes": "512x512"
-        }],
-        "start_url": ".",
-        "display": "standalone",
-        "orientation": "portrait",
-        "background_color": "#1e293b",
-        "theme_color": "#1e293b"
-    };
-    const blob = new Blob([JSON.stringify(configuracionJSON)], { type: 'application/json' });
-    const manifestURL = URL.createObjectURL(blob);
-    const linkManifest = document.createElement('link');
-    linkManifest.rel = 'manifest';
-    linkManifest.href = manifestURL;
-    document.head.appendChild(linkManifest);
-}
+document.addEventListener("DOMContentLoaded", () => {
+    // 📞 CONFIGURACIÓN CENTRAL
+    const NUMERO_WHATSAPP = "5493815555555"; // ⚠️ REEMPLAZÁ CON TU TELÉFONO REAL
 
-function inicializarApp() {
-    activarConfiguracionApp();
+    // 💰 MATRIZ DE TARIFAS REALES ACTUALIZADAS A TUCUMÁN
+    const TARIFA_BASE = 900;       // Costo inicial (bajada de bandera)
+    const PRECIO_POR_KM = 450;     // Valor por kilómetro
 
-    const inputOrigen = document.getElementById('origen');
-    const inputDestino = document.getElementById('destino');
-    const btnManual = document.getElementById('btn-calcular-manual');
+    // ⚙️ ELEMENTOS DE LA INTERFAZ
+    const origenInput = document.getElementById("origen");
+    const destinoInput = document.getElementById("destino");
+    const chkLluvia = document.getElementById("chkLluvia");
+    const chkNocturno = document.getElementById("chkNocturno");
+    const btnCalcular = document.getElementById("btnCalcular");
+    const txtPrecio = document.getElementById("txtPrecio");
+    const btnWhatsApp = document.getElementById("btnWhatsApp");
 
-    if (inputOrigen) inputOrigen.addEventListener('input', calcularRutaYPrecio);
-    if (inputDestino) inputDestino.addEventListener('input', calcularRutaYPrecio);
-    if (btnManual) btnManual.addEventListener('click', calcularRutaYPrecio);
+    let precioFinalCalculado = 0;
 
-    calcularRutaYPrecio();
-}
+    /**
+     * Motor de estimación de distancias reales en Tucumán
+     */
+    function estimarKilometros(orig, dest) {
+        const texto = (orig + " " + dest).toLowerCase().trim();
+        
+        if (!orig || !dest) return 0;
 
-async function buscarCoordenadas(direccion) {
-    if (!direccion) return null;
-    try {
-        const url = `https://openstreetmap.org{encodeURIComponent(direccion + ', San Miguel de Tucumán, Argentina')}&limit=1`;
-        const respuesta = await fetch(url);
-        const datos = await respuesta.json();
-        if (datos && datos.length > 0) {
-            return [parseFloat(datos.lat), parseFloat(datos.lon)];
+        // Caso Jujuy / Uruguay (Aprox 2.7 km)
+        if ((texto.includes("jujuy") && texto.includes("uruguay")) || 
+            (texto.includes("uruguay") && texto.includes("jujuy"))) {
+            return 2.7;
         }
-    } catch (error) {
-        console.error("Error al conectar con el servidor satelital:", error);
+
+        // Yerba Buena / Avenidas principales
+        if (texto.includes("yerba buena") || texto.includes("peron") || texto.includes("aconquija") || texto.includes("solano vera")) {
+            return 8.5;
+        }
+
+        // Municipios vecinos
+        if (texto.includes("banda") || texto.includes("talitas") || texto.includes("alderetes")) {
+            return 6.2;
+        }
+
+        // Trayecto genérico base dentro de San Miguel
+        return 3.5;
     }
-    return null;
-}
 
-async function calcularRutaYPrecio() {
-    const txtOrigen = document.getElementById('origen').value.trim();
-    const txtDestino = document.getElementById('destino').value.trim();
-    const elementoPrecio = document.getElementById('precioEstimado');
+    /**
+     * Función Principal con Control de Vacíos
+     */
+    function calcularTarifaDinamica() {
+        const origen = origenInput.value.trim();
+        const destino = destinoInput.value.trim();
 
-    if (!txtOrigen || !txtDestino) {
-        if (elementoPrecio) elementoPrecio.textContent = "$0";
-        return;
+        // Si alguno de los dos campos está vacío, el precio se resetea a $0
+        if (origen === "" || destino === "") {
+            txtPrecio.textContent = "$0"; 
+            precioFinalCalculado = 0;
+            return; 
+        }
+
+        // Calcular según los kilómetros si ambos campos tienen texto
+        const kilometros = estimarKilometros(origen, destino);
+        let costoSubtotal = TARIFA_BASE + (kilometros * PRECIO_POR_KM);
+
+        // Multiplicadores de Tarifa Dinámica (Estilo Uber)
+        let multiplicador = 1.0;
+
+        if (chkLluvia.checked) {
+            multiplicador += 0.50; // +50% por lluvia (complicado conseguir moto)
+        }
+        if (chkNocturno.checked) {
+            multiplicador += 0.30; // +30% tarifa nocturna
+        }
+
+        // Aplicar redondeo a múltiplos de $50 para el cambio físico
+        let calculoMatematico = costoSubtotal * multiplicador;
+        precioFinalCalculado = Math.round(calculoMatematico / 50) * 50;
+
+        if (precioFinalCalculado < TARIFA_BASE) {
+            precioFinalCalculado = TARIFA_BASE;
+        }
+
+        // Mostrar el precio real calculado en el neón verde
+        txtPrecio.textContent = `$${precioFinalCalculado}`;
     }
 
-    const coordsOrigen = await buscarCoordenadas(txtOrigen);
-    const coordsDestino = await buscarCoordenadas(txtDestino);
+    /**
+     * Envío a WhatsApp verificado
+     */
+    function enviarPedidoWhatsApp() {
+        const origen = origenInput.value.trim();
+        const destino = destinoInput.value.trim();
+        
+        if (origen === "" || destino === "") {
+            alert("Por favor, ingresá las direcciones completas antes de solicitar el cadete.");
+            return;
+        }
 
-    if (coordsOrigen && coordsDestino) {
-        const distanciaKm = medirDistanciaLineal(coordsOrigen, coordsOrigen, coordsDestino, coordsDestino);
-        const costoFinal = Math.round(PRECIO_BASE + (distanciaKm * PRECIO_POR_KM));
+        let estadoClima = chkLluvia.checked ? "🌧️ Lluvia / Alta Demanda" : "☀️ Normal";
+        let estadoHorario = chkNocturno.checked ? "🌙 Nocturno" : "☀️ Diurno";
+        const kms = estimarKilometros(origen, destino);
 
-        if (elementoPrecio) elementoPrecio.textContent = `$${costoFinal}`;
-        actualizarEnlaceWhatsApp(txtOrigen, txtDestino, costoFinal);
-    } else {
-        const costoFijo = PRECIO_BASE + 450;
-        if (elementoPrecio) elementoPrecio.textContent = `$${costoFijo}`;
-        actualizarEnlaceWhatsApp(txtOrigen, txtDestino, costoFijo);
+        const mensaje = encodeURIComponent(
+            `*⚡ NUEVO PEDIDO - MESSENGER-FLASH ⚡*\n\n` +
+            `📍 *Origen (Retiro):* ${origen}\n` +
+            `🏁 *Destino (Entrega):* ${destino}\n\n` +
+            `📊 *Detalles del viaje:*\n` +
+            `- Recorrido apróx: ~${kms} km\n` +
+            `- Estado Clima: ${estadoClima}\n` +
+            `- Horario: ${estadoHorario}\n\n` +
+            `💵 *COSTO ESTIMADO:* $${precioFinalCalculado}\n\n` +
+            `_Por favor, confírmenme los datos de pago para iniciar._`
+        );
+
+        window.open(`https://whatsapp.com{NUMERO_WHATSAPP}&text=${mensaje}`, "_blank");
     }
-}
 
-function medirDistanciaLineal(lat1, lon1, lat2, lon2) {
-    const R = 6371; 
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-}
+    // --- ESCUCHADORES DE EVENTOS EN TIEMPO REAL ---
+    origenInput.addEventListener("input", calcularTarifaDinamica);
+    destinoInput.addEventListener("input", calcularTarifaDinamica);
+    chkLluvia.addEventListener("change", calcularTarifaDinamica);
+    chkNocturno.addEventListener("change", calcularTarifaDinamica);
+    btnCalcular.addEventListener("click", calcularTarifaDinamica);
+    btnWhatsApp.addEventListener("click", enviarPedidoWhatsApp);
 
-function actualizarEnlaceWhatsApp(origen, destino, costo) {
-    const botonWhatsApp = document.getElementById('btn-whatsapp');
-    if (!botonWhatsApp) return;
-
-    const formatoMensaje = `*NUEVO PEDIDO - MESSENGER FLASH* ⚡🏍\n\n` +
-                           `🛫 *RETIRO (Origen):*\n` +
-                           `${origen}\n\n` +
-                           `🛬 *ENTREGA (Destino):*\n` +
-                           `${destino}\n\n` +
-                           `💰 *TARIFA ESTIMADA:* $${costo}\n\n` +
-                           `_Por favor, confírmenme el servicio y envíenme los datos de pago para confirmar._`;
-
-    botonWhatsApp.onclick = function() {
-        const urlLink = `https://wa.me{TELEFONO_KDT}?text=${encodeURIComponent(formatoMensaje)}`;
-        window.open(urlLink, '_blank');
-    };
-}
-
-document.addEventListener("DOMContentLoaded", inicializarApp);
+    // Inicializa en $0 al cargar por primera vez
+    calcularTarifaDinamica();
+});
