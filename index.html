@@ -3,47 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotizador de Envíos - Tucumán</title>
+    <title>Cotizador Express - Tucumán</title>
     <style>
         :root {
             --primary: #25D366;
             --primary-dark: #128C7E;
-            --secondary: #007bff;
-            --bg: #f0f2f5;
-            --card-bg: #ffffff;
-            --text: #333333;
-            --text-light: #666666;
-            --border: #ddd;
-            --success: #28a745;
-            --warning: #ffc107;
+            --bg: #f4f6f8;
+            --card: #ffffff;
+            --text: #333;
             --danger: #dc3545;
+            --warning: #ffc107;
+            --success: #28a745;
+            --info: #17a2b8;
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background: var(--bg); padding: 20px; color: var(--text); }
+        .container { max-width: 500px; margin: 0 auto; background: var(--card); border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); padding: 20px; }
+        
+        header { text-align: center; margin-bottom: 20px; }
+        h1 { color: var(--primary-dark); font-size: 1.6rem; }
+        
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
+        select, input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; background: #fafafa; }
+        select:focus, input:focus { border-color: var(--primary); outline: none; background: #fff; }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); line-height: 1.6; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 25px; }
-        header { text-align: center; margin-bottom: 25px; border-bottom: 2px solid var(--bg); padding-bottom: 15px; }
-        h1 { color: var(--primary-dark); font-size: 1.8rem; margin-bottom: 5px; }
-        p.subtitle { color: var(--text-light); font-size: 0.9rem; }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        .btn-calc { background: var(--primary); color: white; }
+        .btn-calc:hover { background: var(--primary-dark); }
+        .btn-whatsapp { background: #25D366; color: white; display: none; margin-top: 15px; }
+        .btn-reset { background: #6c757d; color: white; margin-top: 10px; }
 
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--text); }
-        input, select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; transition: border 0.3s; }
-        input:focus, select:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.2); }
+        #resultado { margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 10px; border-left: 5px solid var(--success); display: none; }
+        .res-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
+        .res-total { font-size: 1.4rem; font-weight: bold; color: var(--primary-dark); margin-top: 10px; border-top: 2px dashed #ccc; padding-top: 10px; text-align: right; }
+        
+        .alerta { padding: 10px; border-radius: 6px; margin-top: 10px; font-size: 0.9rem; display: none; }
+        .alerta.rojo { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .alerta.amarillo { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .alerta.azul { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
 
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s; margin-top: 10px; }
-        .btn-primary { background-color: var(--primary); color: white; }
-        .btn-primary:hover { background-color: var(--primary-dark); }
-        .btn-whatsapp { background-color: #25D366; color: white; display: none; margin-top: 15px; }
-        .btn-whatsapp:hover { background-color: #128C7E; }
-        .btn-reset { background-color: #6c757d; color: white; margin-top: 10px; }
-
-        #resultado { margin-top: 25px; padding: 20px; background: #e8f5e9; border-radius: 8px; border-left: 5px solid var(--success); display: none; }
-        .res-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
-        .res-total { font-size: 1.3rem; font-weight: bold; color: var(--primary-dark); margin-top: 10px; border-top: 1px solid #ccc; padding-top: 10px; }
-
-        .loading { text-align: center; color: var(--text-light); display: none; margin: 15px 0; }
-        .error { color: var(--danger); font-size: 0.9rem; margin-top: 5px; display: none; }
+        .detalles-cambio { font-size: 0.85rem; color: #666; margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px; }
     </style>
 </head>
 <body>
@@ -51,178 +51,197 @@
 <div class="container">
     <header>
         <h1>🚚 Cotizador Tucumán</h1>
-        <p class="subtitle">Calculá el costo de tu envío al instante</p>
+        <p style="font-size: 0.8rem; color: #666;">Selecciona las zonas para calcular</p>
     </header>
 
     <form id="cotizadorForm">
+        <!-- ZONA DE ORIGEN -->
         <div class="form-group">
-            <label for="origen">📍 Dirección de Origen (Calle y Altura)</label>
-            <input type="text" id="origen" placeholder="Ej: Av. Aconquija 1234, San Miguel de Tucumán" required>
-            <div id="error-origen" class="error"></div>
+            <label>📍 Zona de Origen</label>
+            <select id="origen" required>
+                <option value="" disabled selected>Seleccioná tu zona</option>
+                <option value="centro">Centro (San Miguel)</option>
+                <option value="norte">Norte (Yerba Buena / Tafi Viejo)</option>
+                <option value="sur">Sur (Agua Caliente / Kiosco)</option>
+                <option value="oeste">Oeste (Barrio Norte / 24 de Septiembre)</option>
+                <option value="este">Este (Bella Vista / Kilometro 14)</option>
+                <option value="prohibida">Zona Prohibida (No servimos)</option>
+            </select>
+            <div id="msg-prohibida" class="alerta rojo" style="display:none;">⚠️ Esta zona no está en nuestra área de servicio.</div>
         </div>
 
+        <!-- ZONA DE DESTINO -->
         <div class="form-group">
-            <label for="destino">🏁 Dirección de Destino</label>
-            <input type="text" id="destino" placeholder="Ej: Bv. Sarmiento 500, Tafí Viejo" required>
-            <div id="error-destino" class="error"></div>
-        </div>
-
-        <div class="form-group">
-            <label for="peso">⚖️ Peso del paquete (kg)</label>
-            <input type="number" id="peso" step="0.1" min="0.1" placeholder="Ej: 2.5" required>
-        </div>
-
-        <div class="form-group">
-            <label for="tipo">📦 Tipo de Envío</label>
-            <select id="tipo">
-                <option value="estandar">Estándar (24-48hs)</option>
-                <option value="express">Express (24hs)</option>
-                <option value="urgente">Urgente (Inmediato)</option>
+            <label>🏁 Zona de Destino</label>
+            <select id="destino" required>
+                <option value="" disabled selected>Seleccioná destino</option>
+                <option value="centro">Centro (San Miguel)</option>
+                <option value="norte">Norte (Yerba Buena / Tafi Viejo)</option>
+                <option value="sur">Sur (Agua Caliente / Kiosco)</option>
+                <option value="oeste">Oeste (Barrio Norte / 24 de Septiembre)</option>
+                <option value="este">Este (Bella Vista / Kilometro 14)</option>
+                <option value="prohibida">Zona Prohibida (No servimos)</option>
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary">Calcular Precio</button>
+        <!-- PESO -->
+        <div class="form-group">
+            <label>⚖️ Peso (kg)</label>
+            <input type="number" id="peso" min="0.1" step="0.1" placeholder="Ej: 1.5" required>
+        </div>
+
+        <!-- CONDICIONES ESPECIALES -->
+        <div class="form-group">
+            <label>🌤️ Condiciones Actuales</label>
+            <select id="condicion">
+                <option value="normal">☀️ Día Normal</option>
+                <option value="lluvia">🌧️ Lluvia / Mal Tiempo</option>
+                <option value="demora">⏰ Horario Pico (Retraso)</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-calc">Calcular Costo</button>
     </form>
 
-    <div id="loading" class="loading">Calculando ruta y distancia...</div>
-
     <div id="resultado">
-        <h3>📊 Detalle del Envío</h3>
-        <div class="res-item"><span>Distancia:</span> <span id="res-distancia">0 km</span></div>
-        <div class="res-item"><span>Tiempo estimado:</span> <span id="res-tiempo">0 min</span></div>
-        <div class="res-item"><span>Base (Peso):</span> <span id="res-base">$0</span></div>
-        <div class="res-item"><span>Recargo Tipo:</span> <span id="res-recargo">$0</span></div>
+        <div class="res-row"><span>Base:</span> <span id="res-base">$0</span></div>
+        <div class="res-row"><span>Distancia (Zona):</span> <span id="res-dist">0 km</span></div>
+        <div class="res-row" id="row-descuento" style="color: var(--success); display:none;"><span>💰 Descuento:</span> <span id="res-desc">-$0</span></div>
+        <div class="res-row" id="row-recargo" style="color: var(--danger); display:none;"><span>⚠️ Recargo:</span> <span id="res-add">$0</span></div>
         <div class="res-total">Total: <span id="res-total">$0</span></div>
         
-        <button id="btnWhatsapp" class="btn btn-whatsapp">📲 Enviar Cotización por WhatsApp</button>
+        <button id="btnWhatsapp" class="btn btn-whatsapp">📲 Enviar Pedido por WhatsApp</button>
         <button type="button" id="btnReset" class="btn btn-reset">Limpiar</button>
+    </div>
+
+    <div class="detalles-cambio">
+        <small>
+            <strong>Reglas de Tarifas:</strong><br>
+            • Lluvia: +20% recargo.<br>
+            • Horario Pico: +15% recargo.<br>
+            • Zonas Lejanas: +$500 base.<br>
+            • Descuento >5kg: -10%.
+        </small>
     </div>
 </div>
 
 <script>
-    // Configuración de precios base (puedes editarlos aquí)
-    const PRECIO_BASE_KM = 80; // $ por km
-    const PRECIO_BASE_PESO = 500; // $ fijo por envío
-    const PRECIO_POR_KG = 150; // $ por kg extra
-    
-    const RECARGOS = {
-        'estandar': 1,
-        'express': 1.5,
-        'urgente': 2.0
+    // CONFIGURACIÓN DE PRECIOS Y ZONAS
+    const PRECIO_BASE_KM = 100; // Precio por km de distancia estimada
+    const PRECIO_FIJO = 600; // Costo base por manejo
+    const PRECIO_POR_KG = 200; // Costo por kg extra
+
+    // Distancias estimadas entre zonas (en km) - Matriz simplificada
+    // 0:Centro, 1:Norte, 2:Sur, 3:Oeste, 4:Este, 5:Prohibida
+    const distancias = {
+        'centro': { 'centro': 0, 'norte': 15, 'sur': 12, 'oeste': 10, 'este': 8, 'prohibida': 0 },
+        'norte':  { 'centro': 15, 'norte': 0, 'sur': 25, 'oeste': 18, 'este': 20, 'prohibida': 0 },
+        'sur':    { 'centro': 12, 'norte': 25, 'sur': 0, 'oeste': 14, 'este': 10, 'prohibida': 0 },
+        'oeste':  { 'centro': 10, 'norte': 18, 'sur': 14, 'oeste': 0, 'este': 15, 'prohibida': 0 },
+        'este':   { 'centro': 8, 'norte': 20, 'sur': 10, 'oeste': 15, 'este': 0, 'prohibida': 0 },
+        'prohibida': { 'centro': 0, 'norte': 0, 'sur': 0, 'oeste': 0, 'este': 0, 'prohibida': 0 }
     };
 
     const form = document.getElementById('cotizadorForm');
-    const resultadoDiv = document.getElementById('resultado');
-    const loadingDiv = document.getElementById('loading');
-    const btnWhatsapp = document.getElementById('btnWhatsapp');
-    const btnReset = document.getElementById('btnReset');
+    const origenSelect = document.getElementById('origen');
+    const msgProhibida = document.getElementById('msg-prohibida');
 
-    // Función para geocodificar direcciones usando Nominatim (OpenStreetMap) - Gratuito
-    async function geocodificarGeoref(direccion) {
-        // Añadimos contexto de Tucumán para mejorar la precisión
-        const query = `${direccion}, Tucumán, Argentina`;
-        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`;
-
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-            
-            if (data && data.length > 0) {
-                return {
-                    lat: data.lat,
-                    lon: data.lon,
-                    display_name: data.display_name
-                };
-            }
-            throw new Error("Dirección no encontrada");
-        } catch (error) {
-            console.error("Error geocodificando:", error);
-            return null;
-        }
-    }
-
-    // Función para calcular distancia (Haversine)
-    function calcularDistancia(lat1, lon1, lat2, lon2) {
-        const R = 6371; // Radio de la tierra en km
-        const dLat = (lat2 - lat1) * Math.PI / 180;
-        const dLon = (lon2 - lon1) * Math.PI / 180;
-        const a = 
-            Math.sin(dLat/2) * Math.sin(dLat/2) +
-            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-            Math.sin(dLon/2) * Math.sin(dLon/2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        return R * c;
-    }
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        // Limpiar estados
-        document.getElementById('error-origen').style.display = 'none';
-        document.getElementById('error-destino').style.display = 'none';
-        resultadoDiv.style.display = 'none';
-        btnWhatsapp.style.display = 'none';
-        loadingDiv.style.display = 'block';
-
-        const origenTxt = document.getElementById('origen').value;
-        const destinoTxt = document.getElementById('destino').value;
-        const peso = parseFloat(document.getElementById('peso').value);
-        const tipo = document.getElementById('tipo').value;
-
-        try {
-            // Geocodificar
-            const origenData = await geocodificarGeoref(origenTxt);
-            if (!origenData) throw new Error("No se pudo encontrar la dirección de origen");
-
-            const destinoData = await geocodificarGeoref(destinoTxt);
-            if (!destinoData) throw new Error("No se pudo encontrar la dirección de destino");
-
-            // Calcular distancia
-            const distanciaKm = calcularDistancia(
-                origenData.lat, origenData.lon,
-                destinoData.lat, destinoData.lon
-            );
-
-            // Calcular precio
-            let costoBase = PRECIO_BASE_PESO + (peso * PRECIO_POR_KG);
-            let costoDistancia = distanciaKm * PRECIO_BASE_KM;
-            let subtotal = costoBase + costoDistancia;
-            
-            let multiplicador = RECARGOS[tipo];
-            let total = subtotal * multiplicador;
-
-            // Mostrar resultados
-            document.getElementById('res-distancia').textContent = distanciaKm.toFixed(2) + ' km';
-            document.getElementById('res-tiempo').textContent = Math.round(distanciaKm * 1.5) + ' min (aprox)';
-            document.getElementById('res-base').textContent = '$' + subtotal.toFixed(2);
-            document.getElementById('res-recargo').textContent = 'x' + multiplicador + ' (' + tipo.toUpperCase() + ')';
-            document.getElementById('res-total').textContent = '$' + total.toFixed(2);
-
-            resultadoDiv.style.display = 'block';
-            btnWhatsapp.style.display = 'block';
-            
-            // Configurar mensaje de WhatsApp
-            const mensaje = `Hola! Quiero cotizar un envío:%0A%0A📍 Origen: ${origenTxt}%0A🏁 Destino: ${destinoTxt}%0A⚖️ Peso: ${peso} kg%0A📦 Tipo: ${tipo.toUpperCase()}%0A%0A💰 *Cotización estimada: $${total.toFixed(2)}*%0A(Distancia: ${distanciaKm.toFixed(2)} km)`;
-            btnWhatsapp.onclick = () => {
-                window.open(`https://wa.me/?text=${mensaje}`, '_blank');
-            };
-
-        } catch (error) {
-            const errorMsg = error.message.includes('origen') ? 'error-origen' : 'error-destino';
-            document.getElementById(errorMsg).textContent = error.message;
-            document.getElementById(errorMsg).style.display = 'block';
-        } finally {
-            loadingDiv.style.display = 'none';
+    // Validar zona prohibida en tiempo real
+    origenSelect.addEventListener('change', () => {
+        if (origenSelect.value === 'prohibida') {
+            msgProhibida.style.display = 'block';
+        } else {
+            msgProhibida.style.display = 'none';
         }
     });
 
-    btnReset.addEventListener('click', () => {
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const zonaOrigen = document.getElementById('origen').value;
+        const zonaDestino = document.getElementById('destino').value;
+        const peso = parseFloat(document.getElementById('peso').value);
+        const condicion = document.getElementById('condicion').value;
+
+        // 1. Validar Zona Prohibida
+        if (zonaOrigen === 'prohibida' || zonaDestino === 'prohibida') {
+            alert("❌ Lo sentimos, no realizamos envíos a/desde esta zona.");
+            return;
+        }
+
+        // 2. Calcular Distancia
+        const km = distancias[zonaOrigen] [zonaDestino];
+        
+        // 3. Calcular Costo Base
+        let costo = PRECIO_FIJO + (km * PRECIO_BASE_KM) + (peso * PRECIO_POR_KG);
+
+        // 4. Aplicar Recargos y Descuentos
+        let recargoTotal = 0;
+        let descuentoTotal = 0;
+        let mensajeRecargo = "";
+
+        // Regla: Lluvia
+        if (condicion === 'lluvia') {
+            recargoTotal += (costo * 0.20); // +20%
+            mensajeRecargo += "Lluvia (+20%) ";
+        }
+
+        // Regla: Horario Pico
+        if (condicion === 'demora') {
+            recargoTotal += (costo * 0.15); // +15%
+            mensajeRecargo += "Horario Pico (+15%) ";
+        }
+
+        // Regla: Descuento por volumen (>5kg)
+        if (peso > 5) {
+            descuentoTotal = costo * 0.10; // -10%
+        }
+
+        const total = costo + recargoTotal - descuentoTotal;
+
+        // 5. Mostrar Resultados
+        document.getElementById('res-base').textContent = '$' + (costo + recargoTotal).toFixed(0);
+        document.getElementById('res-dist').textContent = km + ' km';
+        
+        // Mostrar/Ocultar filas de recargos
+        const rowRecargo = document.getElementById('row-recargo');
+        const rowDescuento = document.getElementById('row-descuento');
+
+        if (recargoTotal > 0) {
+            rowRecargo.style.display = 'flex';
+            document.getElementById('res-add').textContent = '+$' + recargoTotal.toFixed(0) + ' (' + mensajeRecargo + ')';
+        } else {
+            rowRecargo.style.display = 'none';
+        }
+
+        if (descuentoTotal > 0) {
+            rowDescuento.style.display = 'flex';
+            document.getElementById('res-desc').textContent = '-$' + descuentoTotal.toFixed(0);
+        } else {
+            rowDescuento.style.display = 'none';
+        }
+
+        document.getElementById('res-total').textContent = '$' + total.toFixed(0);
+        
+        // Mostrar botón WhatsApp
+        document.getElementById('resultado').style.display = 'block';
+        const btnWhatsapp = document.getElementById('btnWhatsapp');
+        btnWhatsapp.style.display = 'block';
+        
+        // Configurar mensaje de WhatsApp
+        const mensaje = `📦 *Nueva Cotización*%0A%0A📍 De: ${origenSelect.options[origenSelect.selectedIndex].text}%0A🏁 A: ${document.getElementById('destino').value}%0A⚖️ Peso: ${peso} kg%0A🌤️ Condición: ${condicion.toUpperCase()}%0A%0A💰 *Total Estimado: $${total.toFixed(0)}*`;
+        
+        btnWhatsapp.onclick = () => {
+            window.open(`https://wa.me/?text=${mensaje}`, '_blank');
+        };
+    });
+
+    document.getElementById('btnReset').addEventListener('click', () => {
         form.reset();
-        resultadoDiv.style.display = 'none';
-        document.getElementById('error-origen').style.display = 'none';
-        document.getElementById('error-destino').style.display = 'none';
+        document.getElementById('resultado').style.display = 'none';
+        msgProhibida.style.display = 'none';
     });
 </script>
 
 </body>
-                </html>
+                    </html>
