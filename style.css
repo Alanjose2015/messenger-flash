@@ -1,104 +1,240 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* =========================================
+   ESTILOS CSS - MESSENGER FLASH
+   ========================================= */
+
+/* RESET Y ESTILOS BASE */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    display: flex; justify-content: center; align-items: flex-start;
-    min-height: 100vh; padding: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 16px;
+    color: #0f172a;
 }
+
+/* CONTENEDOR PRINCIPAL */
 .app-container {
-    width: 100%; max-width: 410px; background: #ffffff;
-    border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    padding: 24px; display: flex; flex-direction: column; gap: 20px;
+    width: 100%;
+    max-width: 410px;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
-.header { text-align: center; }
+
+/* ENCABEZADO */
+.header { text-align: center; margin-bottom: 10px; }
 .section-title {
-    font-size: 22px; font-weight: 800; color: #0f172a;
-    padding-bottom: 10px; border-bottom: 2px solid #f1f5f9; margin-bottom: 10px;
+    font-size: 22px;
+    font-weight: 800;
+    color: #0f172a;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f1f5f9;
+    margin-bottom: 10px;
 }
+
+/* FORMULARIOS */
 .form-group { display: flex; flex-direction: column; gap: 6px; }
 .form-group label {
-    font-size: 12px; font-weight: 700; color: #64748b;
-    text-transform: uppercase; letter-spacing: 0.5px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
+
 .input-text, .select-text {
-    width: 100%; padding: 14px; font-size: 16px; color: #0f172a;
-    background-color: #f8fafc; border: 2px solid #e2e8f0;
-    border-radius: 12px; outline: none; font-weight: 600; transition: all 0.2s;
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    color: #0f172a;
+    background-color: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    outline: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
 }
+
 .input-text:focus, .select-text:focus {
-    border-color: #3b82f6; background-color: #ffffff;
+    border-color: #3b82f6;
+    background-color: #ffffff;
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
 }
+
 .select-wrapper { position: relative; }
 .select-wrapper::after {
-    content: '▼'; position: absolute; right: 15px; top: 50%;
-    transform: translateY(-50%); font-size: 12px; color: #64748b; pointer-events: none;
+    content: '▼';
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #64748b;
+    pointer-events: none;
 }
-/* Destino destacado en naranja */
-#destino { border: 2px solid #ffedd5; background-color: #fff7ed; color: #c2410c; }
-#destino:focus { border-color: #ea580c; background-color: #ffffff; box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.15); }
 
-/* Botones */
-.btn {
-    width: 100%; padding: 15px; border: none; border-radius: 12px;
-    font-size: 16px; font-weight: 700; cursor: pointer;
-    text-align: center; transition: transform 0.1s; color: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2); margin-bottom: 10px;
+/* Destino especial */
+#destino {
+    border: 2px solid #ffedd5;
+    background-color: #fff7ed;
+    color: #c2410c;
 }
+#destino:focus {
+    border-color: #ea580c;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.15);
+}
+
+/* BOTONES */
+.btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.1s, box-shadow 0.2s;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
 .btn:active { transform: scale(0.98); }
+
 .btn-calcular {
     background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
+
 .btn-whatsapp {
     background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
     box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-    display: none; /* Oculto inicialmente */
+    display: none; /* Se activa con JS */
 }
 
-/* Área de Precio */
+/* RESULTADOS Y PRECIOS */
 .price-display {
-    background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 16px;
-    padding: 20px; text-align: center; margin: 10px 0; display: none;
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    margin: 10px 0;
+    display: none;
+    animation: fadeIn 0.5s ease-in;
 }
-.price-display.visible { display: block; animation: fadeIn 0.5s ease-in; }
-.price-label { font-size: 14px; color: #64748b; font-weight: 600; margin-bottom: 5px; }
-.price-value { font-size: 36px; font-weight: 800; color: #0f172a; letter-spacing: -1px; }
 
-/* Mensaje Promocional */
+.price-display.visible { display: block; }
+
+.price-label {
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 600;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+.price-value {
+    font-size: 36px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -1px;
+}
+
+/* MENSAJES PROMOCIONALES */
 .promo-message {
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white; border-radius: 12px; padding: 15px; margin-top: 15px;
-    font-size: 14px; line-height: 1.4; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+    color: white;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 15px;
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
     text-align: center;
 }
-.promo-title { font-size: 16px; font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+.promo-title {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
 .promo-text { font-size: 14px; font-weight: 600; }
 .promo-highlight { color: #d1fae5; font-weight: 800; font-size: 15px; }
 
-/* Badges de estado */
+/* BADGES DE ESTADO */
 .status-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
-    margin-top: 10px; background: #e2e8f0; color: #475569;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-top: 10px;
+    background: #e2e8f0;
+    color: #475569;
 }
+
 .status-badge.active { background: #fee2e2; color: #dc2626; }
 .status-badge.warning { background: #fef3c7; color: #d97706; }
 .status-badge.success { background: #dcfce7; color: #16a34a; }
 
-/* Bloque de Recargos */
+/* RECAROS */
 .recargos-info {
-    background-color: #fff7ed; border: 1px solid #ffedd5; border-radius: 12px;
-    padding: 15px; margin-top: 10px; font-size: 12px; color: #9a3412; line-height: 1.5;
+    background-color: #fff7ed;
+    border: 1px solid #ffedd5;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #9a3412;
+    line-height: 1.5;
+    display: none;
 }
-.recargos-title { font-weight: 800; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; display: block; color: #c2410c; }
+
+.recargos-title {
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 8px;
+    display: block;
+    color: #c2410c;
+}
+
 .recargos-list { list-style: none; padding-left: 0; }
 .recargos-list li { margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
 .recargos-list li::before { content: '⚠️'; font-size: 10px; }
 
-.info-text { font-size: 12px; color: #94a3b8; text-align: center; margin-top: 10px; }
+/* TEXTO INFORMATIVO */
+.info-text {
+    font-size: 12px;
+    color: #94a3b8;
+    text-align: center;
+    margin-top: 10px;
+}
 
+/* ANIMACIONES */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
-             }
+    }
