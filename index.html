@@ -1,347 +1,336 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-AR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messenger-flash - Cadetería Tucumán</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>MESSENGER-FLASH | Mensajería Tucumán</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <meta name="theme-color" content="#0F172A">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Messenger-Flash">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1059/1059177.png">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0F172A',
+                        secondary: '#EAB308',
+                        accent: '#3B82F6',
+                        glow: '#F59E0B',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 0 15px rgba(234, 179, 8, 0.7), 0 0 30px rgba(234, 179, 8, 0.4);
+            }
+            .box-glow {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(59, 130, 246, 0.1);
+            }
+            .box-glow-yellow {
+                box-shadow: 0 0 20px rgba(234, 179, 8, 0.4), 0 0 40px rgba(234, 179, 8, 0.2);
+            }
+            .border-glow {
+                border: 2px solid rgba(234, 179, 8, 0.5);
+            }
+            .transition-custom {
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .tap-highlight {
+                -webkit-tap-highlight-color: transparent;
+            }
+            .input-movil {
+                font-size: 16px !important;
+            }
+        }
+    </style>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        #mapa { 
+            height: 350px; 
+            width: 100%; 
+            border-radius: 16px; 
+            touch-action: manipulation; 
+            z-index: 1;
         }
-
+        .leaflet-control-attribution {
+            font-size: 9px !important;
+        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .container {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .subtitle {
-            color: #7f8c8d;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #34495e;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .icon {
-            margin-right: 8px;
-            font-size: 16px;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 15px;
-            transition: all 0.3s;
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .result {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-            display: none;
-        }
-
-        .result.show {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .result h3 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
-
-        .result-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .result-item:last-child {
-            border-bottom: none;
-        }
-
-        .result-label {
-            color: #7f8c8d;
-            font-size: 14px;
-        }
-
-        .result-value {
-            color: #2c3e50;
-            font-weight: 600;
-            font-size: 14px;
-            word-break: break-word;
-        }
-
-        .total {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid #2c3e50;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .total-label {
-            color: #2c3e50;
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .total-value {
-            color: #667eea;
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .whatsapp-btn {
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            margin-top: 20px;
-        }
-
-        .whatsapp-btn:hover {
-            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
-        }
-
-        .error {
-            color: #e74c3c;
-            text-align: center;
-            margin-top: 15px;
-            font-weight: 600;
-            display: none;
-        }
-
-        .error.show {
-            display: block;
-        }
-
-        .note {
-            font-size: 11px;
-            color: #e74c3c;
-            margin-top: 5px;
-            font-style: italic;
-            text-align: center;
+            overscroll-behavior: none;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>🚚 Messenger-flash</h1>
-        <p class="subtitle">Cadetería Tucumán - Cotización Rápida</p>
+<body class="bg-gradient-to-br from-primary via-blue-900 to-primary min-h-screen font-sans tap-highlight pb-8">
+    <div class="container mx-auto px-3 py-6 max-w-3xl">
         
-        <!-- Campos de texto para direcciones exactas -->
-        <div class="form-group">
-            <label><span class="icon">📍</span>Dirección de Retiro (Exacta)</label>
-            <input type="text" id="direccionRetiro" placeholder="Ej: Av. Aconquija 1234, Yerba Buena" required>
-        </div>
+        <header class="text-center mb-8 pt-4">
+            <h1 class="text-[clamp(2.2rem,12vw,4rem)] font-black text-secondary text-shadow tracking-wider mb-2">
+                ⚡ MESSENGER-FLASH ⚡
+            </h1>
+            <p class="text-white/80 text-base px-2">Mensajería en TODO EL TERRITORIO DE TUCUMÁN</p>
+            <div class="w-40 h-1 bg-secondary mx-auto mt-3 rounded-full box-glow-yellow"></div>
+            <p class="text-white/60 text-xs mt-2">Capital · Yerba Buena · Tafí Viejo · Banda · El Mollar · Amaicha · y más localidades</p>
+        </header>
 
-        <div class="form-group">
-            <label><span class="icon">🎯</span>Dirección de Entrega (Exacta)</label>
-            <input type="text" id="direccionEntrega" placeholder="Ej: Calle 24 de Septiembre 567, Centro" required>
-        </div>
+        <main class="bg-white/95 backdrop-blur-lg rounded-3xl p-5 md:p-7 box-glow border-glow relative overflow-hidden mx-1">
+            <div class="absolute -top-20 -right-20 w-40 h-40 bg-accent/10 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-secondary/10 rounded-full blur-3xl"></div>
 
-        <div class="form-group">
-            <label><span class="icon">⚖️</span>Peso (kg)</label>
-            <input type="number" id="peso" placeholder="Ej: 5" min="0.1" step="0.1" required>
-        </div>
+            <form id="formularioEnvio" class="space-y-5 relative z-10">
 
-        <div class="form-group">
-            <label><span class="icon">☀️</span>Condiciones</label>
-            <select id="condicion">
-                <option value="normal">☀️ Día Normal</option>
-                <option value="lluvia">🌧️ Lluvia (+20%)</option>
-                <option value="pico">🕐 Horario Pico (+15%)</option>
-            </select>
-        </div>
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                    <label class="block text-sm font-bold text-primary mb-2 flex items-center gap-2">
+                        <i class="fa fa-user-circle text-accent"></i> IDENTIFÍCATE CON NOMBRE COMPLETO
+                    </label>
+                    <input type="text" id="nombreCliente" placeholder="Tu Nombre Completo aquí" 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent transition-custom input-movil" required>
+                </div>
 
-        <button onclick="calcular()">Calcular LoMasExactoPosible</button>
-        
-        <div class="error" id="error"></div>
+                <div>
+                    <label class="block text-sm font-semibold text-primary mb-2 flex items-center gap-2">
+                        <i class="fa fa-map-marker text-red-500"></i> DIRECCIÓN DE RETIRO
+                    </label>
+                    <input type="text" id="origen" placeholder="Ej: San Martín 1250 - San Miguel / Calle S/N - El Mollar" 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent transition-custom input-movil" required>
+                    <p class="text-xs text-gray-500 mt-1">* Calle, Número y Localidad (válido toda la provincia)</p>
+                </div>
 
-        <div class="result" id="resultado">
-            <h3>💰 Resumen de Solicitud</h3>
-            <div class="result-item">
-                <span class="result-label">Retiro:</span>
-                <span class="result-value" id="res-retiro"></span>
+                <div>
+                    <label class="block text-sm font-semibold text-primary mb-2 flex items-center gap-2">
+                        <i class="fa fa-map-pin text-green-600"></i> DIRECCIÓN DE ENTREGA
+                    </label>
+                    <input type="text" id="destino" placeholder="Ej: Av. Roca 3400 - Yerba Buena / Centro - Amaicha" 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent transition-custom input-movil" required>
+                    <p class="text-xs text-gray-500 mt-1">* Calle, Número y Localidad</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-primary mb-2 flex items-center gap-2">
+                        <i class="fa fa-list-alt text-secondary"></i> ¿QUÉ VAS A ENVIAR?
+                    </label>
+                    <select id="tipoEnvio" 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-secondary focus:border-secondary transition-custom bg-white input-movil" required>
+                        <option value="">-- Selecciona una opción --</option>
+                        <option value="comida">🍕 Comida</option>
+                        <option value="bebidas">🥤 Bebidas</option>
+                        <option value="fragil">📦 Cosas frágiles (Vidrio, Electrónicos, etc.)</option>
+                        <option value="documento">📄 Sobres cerrados / Documentos Importantes</option>
+                        <option value="compras">🛒 Pedidos de Compras / Mercadería</option>
+                        <option value="otros">❓ Otros artículos</option>
+                    </select>
+                    <p id="avisoTipo" class="text-sm text-red-600 font-medium mt-2 h-6"></p>
+                </div>
+
+                <div id="mapa" class="mt-4 hidden"></div>
+
+                <div id="resultados" class="mt-4 p-4 rounded-xl bg-gradient-to-r from-blue-50 to-yellow-50 border border-accent/20 hidden transition-custom">
+                    <h3 class="font-bold text-primary text-lg mb-3 text-center">📋 Resumen del Servicio</h3>
+                    <div class="grid grid-cols-1 gap-3 text-center">
+                        <div class="bg-white/70 p-3 rounded-lg">
+                            <p class="text-sm text-gray-600">Distancia Real</p>
+                            <p class="font-bold text-accent text-xl"><span id="distanciaValor">0</span> km</p>
+                        </div>
+                        <div class="bg-white/70 p-3 rounded-lg">
+                            <p class="text-sm text-gray-600">Tiempo Aprox.</p>
+                            <p class="font-bold text-accent text-xl"><span id="tiempoValor">0</span> min</p>
+                        </div>
+                        <div class="bg-white/70 p-3 rounded-lg">
+                            <p class="text-sm text-gray-600">TARIFA TOTAL</p>
+                            <p class="font-bold text-green-700 text-2xl text-shadow">$ <span id="tarifaValor">0</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" 
+                    class="w-full bg-gradient-to-r from-accent to-blue-700 hover:from-blue-700 hover:to-accent text-white font-bold py-4 px-6 rounded-xl text-lg uppercase tracking-wider box-glow transition-custom transform hover:scale-[1.02] active:scale-[0.98] min-h-[50px]">
+                    🚀 Calcular Precio Exacto
+                </button>
+
+                <a id="botonWhatsapp" href="#" target="_blank" rel="noopener noreferrer"
+                    class="hidden w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-6 rounded-xl text-lg text-center uppercase tracking-wider box-glow-yellow transition-custom transform hover:scale-[1.02] active:scale-[0.98] min-h-[50px]">
+                    <i class="fa fa-whatsapp mr-2"></i> Pedir Cadete Ahora
+                </a>
+
+            </form>
+        </main>
+
+        <footer class="mt-10 text-center text-white/70 text-sm px-4">
+            <p class="mb-3">© 2026 MESSENGER-FLASH - Mensajería en Todo Tucumán</p>
+            <div class="mt-2">
+                <span id="correoOculto">Contacto: **********@gmail.com</span>
+                <button id="verCorreoBtn" class="ml-2 bg-secondary/80 hover:bg-secondary text-primary font-semibold px-3 py-1 rounded-lg text-xs transition-custom">
+                    Ver correo
+                </button>
+                <p class="mt-2">Correo: poncejose027@gmail.com</p>
             </div>
-            <div class="result-item">
-                <span class="result-label">Entrega:</span>
-                <span class="result-value" id="res-entrega"></span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Peso:</span>
-                <span class="result-value" id="res-peso"></span>
-            </div>
-            <div class="total">
-                <span class="total-label">Estimado:</span>
-                <span class="total-value" id="res-total"></span>
-            </div>
-            <p class="note">*Precio estimado. Confirmá el envío por WhatsApp.</p>
-            <button class="whatsapp-btn" onclick="enviarWhatsapp()">📱 Enviar Solicitud por WhatsApp</button>
-        </div>
+        </footer>
     </div>
 
     <script>
-        const PRECIO_POR_KM = 400; 450;
-        const TARIFA_BASE =1500;
-        const NUMERO_WHATSAPP = "5493815727447";
+        const TARIFA_BASE = 1800;
+        const PRECIO_POR_KM = 400;
+        const RECARGO_FRAGIL = 1000;
+        const RECARGO_COMIDA = 350;
+        const RECARGO_DOCUMENTO = 200;
 
-        let ultimoDato = null;
+        const NUMERO_WHATSAPP = "5493815727447"; 
 
-        function mostrarError(mensaje) {
-            const errorDiv = document.getElementById('error');
-            errorDiv.textContent = mensaje;
-            errorDiv.classList.add('show');
-            setTimeout(() => errorDiv.classList.remove('show'), 5000);
+        let mapa;
+        let datosEnvioFinal = {};
+
+        document.getElementById('formularioEnvio').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calcularRuta();
+        });
+
+        document.getElementById('tipoEnvio').addEventListener('change', function() {
+            const aviso = document.getElementById('avisoTipo');
+            switch(this.value) {
+                case 'fragil': aviso.textContent = "⚠️ Se aplicó recargo por embalaje y manejo especial seguro"; break;
+                case 'comida': case 'bebidas': aviso.textContent = "🍱 Transporte en condiciones óptimas de temperatura y cuidado"; break;
+                case 'documento': aviso.textContent = "🔑 Servicio prioritario con entrega bajo firma"; break;
+                default: aviso.textContent = "";
+            }
+        });
+
+        async function calcularRuta() {
+            const nombreCliente = document.getElementById('nombreCliente').value.trim();
+            const origen = document.getElementById('origen').value.trim();
+            const destino = document.getElementById('destino').value.trim();
+            const tipoEnvio = document.getElementById('tipoEnvio').value;
+
+            if(!nombreCliente || !origen || !destino || !tipoEnvio) {
+                alert("⚠️ Completa todos los campos por favor");
+                return;
+            }
+
+            try {
+                const coordOrigen = await obtenerCoordenadas(origen);
+                const coordDestino = await obtenerCoordenadas(destino);
+
+                if (!coordOrigen || !coordDestino) {
+                    alert("❌ Dirección no encontrada en Tucumán. Escribe Calle, Número y Localidad.");
+                    return;
+                }
+
+                const ruta = await obtenerRutaReal(coordOrigen, coordDestino);
+                
+                if (!ruta) {
+                    alert("❌ No se pudo calcular la ruta. Intenta nuevamente.");
+                    return;
+                }
+
+                const distanciaKm = (ruta.distance / 1000).toFixed(2);
+                const tiempoMin = Math.round(ruta.duration / 60);
+
+                let tarifaTotal = TARIFA_BASE + (parseFloat(distanciaKm) * PRECIO_POR_KM);
+
+                switch(tipoEnvio) {
+                    case 'fragil': tarifaTotal += RECARGO_FRAGIL; break;
+                    case 'comida': case 'bebidas': tarifaTotal += RECARGO_COMIDA; break;
+                    case 'documento': tarifaTotal += RECARGO_DOCUMENTO; break;
+                }
+
+                tarifaTotal = Math.round(tarifaTotal);
+
+                datosEnvioFinal = { nombreCliente, origen, destino, tipoEnvio, distanciaKm, tarifaTotal };
+
+                document.getElementById('distanciaValor').textContent = distanciaKm;
+                document.getElementById('tiempoValor').textContent = tiempoMin;
+                document.getElementById('tarifaValor').textContent = tarifaTotal;
+                document.getElementById('resultados').classList.remove('hidden');
+                document.getElementById('botonWhatsapp').classList.remove('hidden');
+
+                const mensaje = encodeURIComponent(
+                    `Hola, soy ${nombreCliente}. Quiero pedir un cadete.%0A%0A` +
+                    `📤 Retiro: ${origen}%0A` +
+                    `📥 Entrega: ${destino}%0A` +
+                    `📦 Envío: ${tipoEnvio}%0A` +
+                    `🛣️ Distancia: ${distanciaKm} km%0A` +
+                    `💰 Total a pagar: $${tarifaTotal}`
+                );
+                document.getElementById('botonWhatsapp').href = `https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`;
+
+                mostrarMapa(coordOrigen, coordDestino, ruta.geometry);
+
+                setTimeout(() => {
+                    document.getElementById('resultados').scrollIntoView({behavior: 'smooth', block: 'start'});
+                }, 100);
+
+            } catch (error) {
+                console.error("Error:", error);
+                alert("❌ Problema de conexión. Verifica tu internet.");
+            }
         }
 
-        function calcular() {
-            const dirRetiro = document.getElementById('direccionRetiro').value.trim();
-            const dirEntrega = document.getElementById('direccionEntrega').value.trim();
-            const peso = parseFloat(document.getElementById('peso').value);
-            const condicion = document.getElementById('condicion').value;
-            const resultadoDiv = document.getElementById('resultado');
+        async function obtenerCoordenadas(direccion) {
+            const respuesta = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion)}&limit=1&countrycodes=AR&state=Tucumán&addressdetails=1`);
+            if (!respuesta.ok) throw new Error("Error búsqueda");
+            const datos = await respuesta.json();
+            if (datos.length === 0) return null;
+            return [parseFloat(datos[0].lat), parseFloat(datos[0].lon)];
+        }
 
-            document.getElementById('error').classList.remove('show');
-            resultadoDiv.classList.remove('show');
-
-            if (!dirRetiro || !dirEntrega) {
-                mostrarError('⚠️ Ingresá las direcciones exactas');
-                return;
-            }
-            if (dirRetiro.toLowerCase() === dirEntrega.toLowerCase()) {
-                mostrarError('⚠️ Las direcciones deben ser diferentes');
-                return;
-            }
-            if (!peso || peso <= 0) {
-                mostrarError('⚠️ Ingresá un peso válido');
-                return;
-            }
-
-            // Estimación simple basada en peso y condiciones
-            let estimado = TARIFA_BASE + (peso * 1200);
+        async function obtenerRutaReal(origen, destino) {
+            const url = `https://router.project-osrm.org/route/v1/driving/${origen[1]},${origen[0]};${destino[1]},${destino[0]}?overview=full&geometries=geojson`;
+            const respuesta = await fetch(url);
+            if (!respuesta.ok) throw new Error("Error ruta");
+            const datos = await respuesta.json();
+            if (datos.code !== 'Ok') return null;
             
-            if (condicion === 'lluvia') estimado *= 1900;
-            if (condicion === 'pico') estimado *= 1.500;
-            if (peso > 5) estimado *= 5; // Descuento por volumen
-
-            const total = Math.round(estimado);
-
-            ultimoDato = {
-                retiro: dirRetiro,
-                entrega: dirEntrega,
-                peso: peso,
-                condicion: condicion,
-                total: total
+            return {
+                distance: datos.routes[0].distance,
+                duration: datos.routes[0].duration,
+                geometry: datos.routes[0].geometry
             };
-
-            document.getElementById('res-retiro').textContent = dirRetiro;
-            document.getElementById('res-entrega').textContent = dirEntrega;
-            document.getElementById('res-peso').textContent = `${peso} kg`;
-            document.getElementById('res-total').textContent = `$${total}`;
-            
-            resultadoDiv.classList.add('show');
         }
 
-        function enviarWhatsapp() {
-            if (!ultimoDato) {
-                mostrarError('⚠️ Primero calculá el estimado');
-                return;
-            }
+        function mostrarMapa(origen, destino, geometria) {
+            const contenedorMapa = document.getElementById('mapa');
+            contenedorMapa.classList.remove('hidden');
 
-            const d = ultimoDato;
-            const condicionTexto = d.condicion === 'normal' ? 'Día Normal' : d.condicion === 'lluvia' ? 'Lluvia' : 'Horario Pico';
+            if (mapa) mapa.remove();
 
-            // Mensaje que te llega a TU WhatsApp con las direcciones EXACTAS
-            const mensaje = `
-*🚚 Nueva Solicitud - Messenger-flash*
---------------------------
-📍 *Retiro:* ${d.retiro}
-🎯 *Entrega:* ${d.entrega}
-⚖️ *Peso:* ${d.peso} kg
-☀️ *Condición:* ${condicionTexto}
---------------------------
-💰 *Precio estimado:* $${d.total}
-            `.trim();
+            mapa = L.map('mapa', { 
+                zoomControl: true,
+                scrollWheelZoom: false,
+                tap: true
+            }).setView([-26.9451, -65.3713], 10);
 
-            const url = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
-            window.open(url, '_blank');
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap',
+                className: 'map-tiles'
+            }).addTo(mapa);
+
+            L.marker(origen, {icon: L.icon({iconUrl: 'https://cdn-icons-png.flaticon.com/32/955/955419.png', iconSize: [32,32]})}).addTo(mapa).bindPopup("Lugar de Retiro");
+            L.marker(destino, {icon: L.icon({iconUrl: 'https://cdn-icons-png.flaticon.com/32/954/954717.png', iconSize: [32,32]})}).addTo(mapa).bindPopup("Lugar de Entrega");
+
+            L.geoJSON(geometria, {
+                style: { color: '#3B82F6', weight: 6, opacity: 0.8 }
+            }).addTo(mapa);
+
+            mapa.fitBounds(L.geoJSON(geometria).getBounds(), {padding: [20,20]});
         }
+
+        document.getElementById('verCorreoBtn').addEventListener('click', function() {
+            document.getElementById('correoOculto').textContent = "Contacto: poncejose027@gmail.com";
+            this.remove();
+        });
     </script>
 </body>
-                </html>
+                            </html>
+    
