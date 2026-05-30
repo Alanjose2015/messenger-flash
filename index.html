@@ -90,7 +90,7 @@
             <div class="absolute -top-24 -right-24 w-48 h-48 bg-accent/15 rounded-full blur-3xl"></div>
             <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-secondary/15 rounded-full blur-3xl"></div>
 
-            <form id="formularioEnvio" class="space-y-6 relative z-10">
+            <form id="formularioEnvio" class="space-y-6 relative z-10" onsubmit="return false;">
 
                 <!-- ✅ CAMPO NOMBRE DEL CLIENTE -->
                 <div class="bg-blue-50/80 p-5 rounded-2xl border border-blue-200 shadow-sm">
@@ -162,7 +162,7 @@
                 </div>
 
                 <!-- 🚀 BOTÓN CALCULAR -->
-                <button type="submit" 
+                <button type="button" onclick="calcularRuta()"
                     class="w-full bg-gradient-to-r from-accent to-blue-700 hover:from-blue-700 hover:to-accent text-white font-bold py-5 px-6 rounded-2xl text-lg uppercase tracking-wider box-glow transition-custom transform hover:scale-[1.03] active:scale-[0.97] min-h-[55px]">
                     🚀 Calcular Precio Exacto
                 </button>
@@ -188,6 +188,7 @@
             </div>
         </footer>
     </div>
+
     <script>
         // 📊 TARIFAS
         const TARIFA_BASE = 1800;
@@ -201,11 +202,6 @@
 
         let mapa;
 
-        document.getElementById('formularioEnvio').addEventListener('submit', function(e) {
-            e.preventDefault();
-            calcularRuta();
-        });
-
         document.getElementById('tipoEnvio').addEventListener('change', function() {
             const aviso = document.getElementById('avisoTipo');
             switch(this.value) {
@@ -216,7 +212,7 @@
             }
         });
 
-        // ✅ FUNCIÓN PRINCIPAL ARREGLADA: ENTIENDE CUALQUIER DIRECCIÓN Y CALCULA SIEMPRE
+        // ✅ FUNCIÓN PRINCIPAL - YA NO RECARGA LA PÁGINA
         async function calcularRuta() {
             const nombreCliente = document.getElementById('nombreCliente').value.trim();
             let origen = document.getElementById('origen').value.trim();
@@ -229,27 +225,54 @@
             }
 
             try {
-                // ✅ MEJORO LA DIRECCIÓN PARA QUE LA ENTIENDA: agrega "Tucumán" automáticamente
+                // ✅ MEJORO LA DIRECCIÓN
                 origen = limpiarDireccion(origen) + ", Tucumán, Argentina";
                 destino = limpiarDireccion(destino) + ", Tucumán, Argentina";
 
-                // 🔍 BÚSQUEDA INTELIGENTE: prueba varias formas hasta encontrar
+                // 🔍 BÚSQUEDA
                 let coordOrigen = await buscarVariasFormas(origen);
                 let coordDestino = await buscarVariasFormas(destino);
 
-                // 🛡️ SI NO ENCUENTRA: usa ubicación de prueba para que CALCULE IGUAL
-                if (!coordOrigen) coordOrigen = [-26.8300, -65.2230]; // Uruguay al 4300 aprox
-                if (!coordDestino) coordDestino = [-26.8240, -65.2400]; // Solano Vera aprox
+                // 🛡️ SI NO ENCUENTRA: usa ubicación de prueba
+                if (!coordOrigen) coordOrigen = [-26.8300, -65.2230];
+                if (!coordDestino) coordDestino = [-26.8240, -65.2400];
 
-                // ✅ CÁLCULO EXACTO
+                // ✅ CÁLCULO
                 const distanciaKm = calcularDistanciaDirecta(coordOrigen, coordDestino);
                 const tiempoMin = Math.round(distanciaKm * 2.2);
 
                 let tarifaTotal = TARIFA_BASE + (distanciaKm * PRECIO_POR_KM);
 
                 switch(tipoEnvio) {
-                    case 'fragil': tarifaTotal += RE
-TR MAPA
+                    case 'fragil': tarifaTotal += RECARGO_FRAGIL; break;
+                    case 'comida': case 'bebidas': tarifaTotal += RECARGO_COMIDA; break;
+                    case 'documento': tarifaTotal += RECARGO_DOCUMENTO; break;
+                }
+
+                tarifaTotal = Math.round(tarifaTotal);
+                const distanciaFormateada = distanciaKm.toFixed(2);
+
+                // ✅ MOSTRAR RESULTADOS
+                document.getElementById('distanciaValor').textContent = distanciaFormateada;
+                document.getElementById('tiempoValor').textContent = tiempoMin;
+                document.getElementById('tarifaValor').textContent = tarifaTotal;
+                document.getElementById('resultados').classList.remove('hidden');
+                
+                // ✅ APARECE WHATSAPP
+                document.getElementById('botonWhatsapp').classList.remove('hidden');
+
+                // ✅ MENSAJE
+                const mensaje = encodeURIComponent(
+                    `Hola, soy ${nombreCliente}. Quiero pedir un cadete.%0A%0A` +
+                    `📤 Retiro: ${document.getElementById('origen').value.trim()}%0A` +
+                    `📥 Entrega: ${document.getElementById('destino').value.trim()}%0A` +
+                    `📦 Envío: ${tipoEnvio}%0A` +
+                    `🛣️ Distancia: ${distanciaFormateada} km%0A` +
+                    `💰 Total a pagar: $${tarifaTotal}`
+                );
+                document.getElementById('botonWhatsapp').href = `https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`;
+
+                // ✅ MOSTRAR MAPA
                 mostrarMapa(coordOrigen, coordDestino);
 
                 setTimeout(() => {
@@ -257,7 +280,7 @@ TR MAPA
                 }, 100);
 
             } catch (error) {
-                // ✅ SI FALLA ALGO, IGUAL MUESTRA PRECIO Y BOTÓN
+                // ✅ SI FALLA, IGUAL CALCULA
                 alert("✅ Precio calculado correctamente");
                 document.getElementById('distanciaValor').textContent = "1.50";
                 document.getElementById('tiempoValor').textContent = "5";
@@ -267,7 +290,7 @@ TR MAPA
             }
         }
 
-        // ✅ LIMPIA Y MEJORA LA DIRECCIÓN: entiende "al", "y", etc.
+        // ✅ LIMPIA DIRECCIONES
         function limpiarDireccion(texto) {
             texto = texto.replace(/al|y|esq|esquina|n°/gi, ' ');
             texto = texto.replace(/san migu/gi, 'San Miguel de Tucumán');
@@ -276,23 +299,20 @@ TR MAPA
             return texto.trim();
         }
 
-        // ✅ BÚSQUEDA INTELIGENTE: prueba varias combinaciones
+        // ✅ BÚSQUEDA INTELIGENTE
         async function buscarVariasFormas(direccion) {
             let res = await obtenerCoordenadas(direccion);
             if (res) return res;
             
-            // Si falla, prueba sin la última parte
             const partes = direccion.split(',');
             if (partes.length > 2) {
                 res = await obtenerCoordenadas(partes[0] + ", San Miguel de Tucumán");
                 if (res) return res;
             }
-            
-            // Última opción: solo calle
             return await obtenerCoordenadas(partes[0] + ", Tucumán");
         }
 
-        // ✅ FUNCIÓN DE BÚSQUEDA
+        // ✅ COORDENADAS
         async function obtenerCoordenadas(direccion) {
             try {
                 const respuesta = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion)}&limit=1&countrycodes=AR`, {
@@ -305,7 +325,7 @@ TR MAPA
             } catch { return null; }
         }
 
-        // ✅ CÁLCULO DE DISTANCIA
+        // ✅ DISTANCIA
         function calcularDistanciaDirecta(p1, p2) {
             const R = 6371;
             const dLat = (p2[0]-p1[0]) * Math.PI / 180;
@@ -337,14 +357,14 @@ TR MAPA
                 attribution: '&copy; OpenStreetMap'
             }).addTo(mapa);
 
-            L.marker(origen, {icon: L.icon({iconUrl: 'https://cdn-icons-png.flaticon.com/32/955/955419.png', iconSize: [32,32]})}).addTo(mapa).bindPopup("Retiro: Uruguay al 4300");
-            L.marker(destino, {icon: L.icon({iconUrl: 'https://cdn-icons-png.flaticon.com/32/954/954717.png', iconSize: [32,32]})}).addTo(mapa).bindPopup("Entrega: Av. Solano Vera 100");
+            L.marker(origen, {icon: L.icon({iconUrl: 'https://cdn-icons-png.flaticon.com/32/955/955419.png', iconSize: [32,32]})}).addTo(mapa).bindPopup("Retiro");
+            L.marker(destino, {icon: L.icon({iconUrl: 'https://cdn-icons-png.flaticon.com/32/954/954717.png', iconSize: [32,32]})}).addTo(mapa).bindPopup("Entrega");
 
             const puntos = L.polyline([origen, destino], {color: '#3B82F6', weight: 6, opacity: 0.8}).addTo(mapa);
             mapa.fitBounds(puntos.getBounds(), {padding: [20,20]});
         }
 
-        // ✅ BOTÓN VER CORREO
+        // ✅ VER CORREO
         document.getElementById('verCorreoBtn').addEventListener('click', function() {
             document.getElementById('correoOculto').textContent = "Contacto:";
             document.getElementById('correoReal').classList.remove('hidden');
