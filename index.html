@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Messenger Flash - Ofertas</title>
+    <title>Messenger Flash</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -49,43 +49,49 @@
         .btn:active { transform: scale(0.98); }
         
         .btn-calcular {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
         
         .btn-whatsapp {
             background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
             box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
-            display: none; /* Oculto hasta calcular */
+            display: none; /* Oculto inicialmente */
         }
         
-        /* Área de Precio Mejorada */
+        /* Área de Precio */
         .price-display {
             background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 16px;
             padding: 20px; text-align: center; margin: 10px 0;
             display: none; /* Oculto inicialmente */
-            position: relative;
-            overflow: hidden;
         }
         .price-display.visible { display: block; animation: fadeIn 0.5s ease-in; }
         
         .price-label { font-size: 14px; color: #64748b; font-weight: 600; margin-bottom: 5px; }
         .price-value { font-size: 36px; font-weight: 800; color: #0f172a; letter-spacing: -1px; }
         
-        /* Mensaje Promocional dentro del precio */
-        .promo-badge {
+        /* Mensaje Promocional (El que pediste) */
+        .promo-message {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-size: 13px;
-            font-weight: 700;
-            margin: 10px auto;
-            max-width: 90%;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            font-size: 14px;
+            line-height: 1.4;
             box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
             text-align: center;
         }
-        .promo-badge strong { color: #d1fae5; }
+        .promo-title {
+            font-size: 16px; font-weight: 800; margin-bottom: 8px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .promo-text {
+            font-size: 14px; font-weight: 600;
+        }
+        .promo-highlight {
+            color: #d1fae5; font-weight: 800; font-size: 15px;
+        }
         
         .status-badge {
             display: inline-flex; align-items: center; gap: 6px;
@@ -112,6 +118,7 @@
             <p style="color: #64748b; font-size: 14px;">Cotizador Inteligente Tucumán</p>
         </div>
 
+        <!-- CAMPOS DE ORIGEN Y DESTINO (VISIBLES Y FUNCIONALES) -->
         <div class="form-group">
             <label for="origen">📍 Origen (Retiro)</label>
             <input type="text" id="origen" class="input-text" placeholder="Ej: Av Aconquija 1200">
@@ -124,30 +131,34 @@
 
         <!-- BOTÓN DE CALCULAR -->
         <button id="btnCalcular" class="btn btn-calcular">
-            🧮 Calcular Precio con Descuento
+            🧮 Calcular Precio
         </button>
 
-        <!-- ÁREA DE PRECIO MEJORADA -->
+        <!-- ÁREA DE PRECIO + MENSAJE LLAMATIVO -->
         <div id="priceDisplay" class="price-display">
-            <div class="price-label">PRECIO ESTIMADO (SIN DESCUENTO)</div>
+            <div class="price-label">COSTO ESTIMADO</div>
             <div class="price-value" id="txtPrecio">$0</div>
             
-            <!-- MENSAJE PROMOCIONAL LLAMATIVO -->
-            <div class="promo-badge">
-                🚀 ¡Pide tu cotización AHORA!<br>
-                Descuentos del <strong>5%, 10%, 15% y hasta 20%</strong><br>
-                <span style="font-size: 11px; display: block; margin-top: 4px;">✨ ¡Cuanto más usas la web, menos pagas!</span>
+            <!-- MENSAJE LLAMATIVO QUE PEDISTE -->
+            <div class="promo-message">
+                <div class="promo-title">¡PIDE TU COTIZACIÓN AHORA!</div>
+                <div class="promo-text">
+                    Descuentos del <span class="promo-highlight">5%, 10%, 15%</span> y hasta el <span class="promo-highlight">20%</span> en tus viajes.
+                </div>
+                <div class="promo-text" style="font-style: italic; font-size: 12px; margin-top: 5px;">
+                    ✨ ¡Cuanto más usas la web, menos pagas! ✨
+                </div>
             </div>
 
             <div id="statusContainer"></div>
         </div>
 
-        <!-- BOTÓN DE WHATSAPP -->
+        <!-- BOTÓN DE WHATSAPP (Solo visible después de calcular) -->
         <button id="btnWhatsApp" class="btn btn-whatsapp">
-            📲 Confirmar y Aplicar Descuento
+            📲 Enviar Pedido a WhatsApp
         </button>
         
-        <p class="info-text">*El precio final se ajusta al confirmar por WhatsApp aplicando tu descuento progresivo.</p>
+        <p class="info-text">*Los precios se ajustan automáticamente por demanda, clima y zona.</p>
     </div>
 
     <script>
@@ -247,11 +258,11 @@
                 const precio = txtPrecio.textContent;
 
                 const mensaje = encodeURIComponent(
-                    `*⚡ SOLICITUD DE COTIZACIÓN CON DESCUENTO ⚡*\n\n` +
+                    `*⚡ SOLICITUD DE COTIZACIÓN ⚡*\n\n` +
                     `📍 *Origen:* ${origen}\n` +
                     `🏁 *Destino:* ${destino}\n\n` +
-                    `💵 *Precio estimado visible:* ${precio}\n\n` +
-                    `🚀 *Solicito aplicar mi descuento progresivo (5%, 10%, 15% o 20%)*.\n` +
+                    `💵 *Precio estimado:* ${precio}\n\n` +
+                    `🚀 *Quiero aplicar mi descuento progresivo (5%, 10%, 15% o 20%)*.\n` +
                     `¡Espero su confirmación del precio final!`
                 );
 
