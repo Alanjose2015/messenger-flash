@@ -294,11 +294,11 @@
             }
 
             // Estimación simple basada en peso y condiciones
-            let estimado = TARIFA_BASE + (peso * 250);
+            let estimado = TARIFA_BASE + (peso * 1200);
             
-            if (condicion === 'lluvia') estimado *= 1200;
-            if (condicion === 'pico') estimado *= 1.000;
-            if (peso > 5) estimado *= 0.90; // Descuento por volumen
+            if (condicion === 'lluvia') estimado *= 1900;
+            if (condicion === 'pico') estimado *= 1.500;
+            if (peso > 5) estimado *= 5; // Descuento por volumen
 
             const total = Math.round(estimado);
 
@@ -344,4 +344,4 @@
         }
     </script>
 </body>
-    </html>
+                </html>
