@@ -3,245 +3,469 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotizador Express - Tucumán</title>
+    <title>Messenger-flash - Cadetería Tucumán</title>
     <style>
-        :root {
-            --primary: #25D366;
-            --primary-dark: #128C7E;
-            --bg: #f4f6f8;
-            --card: #ffffff;
-            --text: #333;
-            --danger: #dc3545;
-            --warning: #ffc107;
-            --success: #28a745;
-            --info: #17a2b8;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        body { background: var(--bg); padding: 20px; color: var(--text); }
-        .container { max-width: 500px; margin: 0 auto; background: var(--card); border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); padding: 20px; }
-        
-        header { text-align: center; margin-bottom: 20px; }
-        h1 { color: var(--primary-dark); font-size: 1.6rem; }
-        
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem; }
-        select, input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; background: #fafafa; }
-        select:focus, input:focus { border-color: var(--primary); outline: none; background: #fff; }
 
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .btn-calc { background: var(--primary); color: white; }
-        .btn-calc:hover { background: var(--primary-dark); }
-        .btn-whatsapp { background: #25D366; color: white; display: none; margin-top: 15px; }
-        .btn-reset { background: #6c757d; color: white; margin-top: 10px; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
 
-        #resultado { margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 10px; border-left: 5px solid var(--success); display: none; }
-        .res-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.95rem; }
-        .res-total { font-size: 1.4rem; font-weight: bold; color: var(--primary-dark); margin-top: 10px; border-top: 2px dashed #ccc; padding-top: 10px; text-align: right; }
-        
-        .alerta { padding: 10px; border-radius: 6px; margin-top: 10px; font-size: 0.9rem; display: none; }
-        .alerta.rojo { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .alerta.amarillo { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
-        .alerta.azul { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
 
-        .detalles-cambio { font-size: 0.85rem; color: #666; margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px; }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        select, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .result-label {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .result-value {
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 14px;
+            word-break: break-word;
+        }
+
+        .total {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-label {
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .total-value {
+            color: #667eea;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            margin-top: 20px;
+        }
+
+        .whatsapp-btn:hover {
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+        }
+
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .rules {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .rules h4 {
+            color: #34495e;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .rules ul {
+            list-style-position: inside;
+        }
+
+        .rules li {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
-
-<div class="container">
-    <header>
-        <h1>🚚 Cotizador Tucumán</h1>
-        <p style="font-size: 0.8rem; color: #666;">Selecciona las zonas para calcular</p>
-    </header>
-
-    <form id="cotizadorForm">
-        <!-- ZONA DE ORIGEN -->
+    <div class="container">
+        <h1>🚚 Messenger-flash</h1>
+        <p class="subtitle">Cadetería Tucumán - Cotizador Inteligente</p>
+        
         <div class="form-group">
-            <label>📍 Zona de Origen</label>
-            <select id="origen" required>
-                <option value="" disabled selected>Seleccioná tu zona</option>
-                <option value="centro">Centro (San Miguel)</option>
-                <option value="norte">Norte (Yerba Buena / Tafi Viejo)</option>
-                <option value="sur">Sur (Agua Caliente / Kiosco)</option>
-                <option value="oeste">Oeste (Barrio Norte / 24 de Septiembre)</option>
-                <option value="este">Este (Bella Vista / Kilometro 14)</option>
-                <option value="prohibida">Zona Prohibida (No servimos)</option>
-            </select>
-            <div id="msg-prohibida" class="alerta rojo" style="display:none;">⚠️ Esta zona no está en nuestra área de servicio.</div>
+            <label><span class="icon">📍</span>Dirección de Retiro</label>
+            <input type="text" id="direccionRetiro" placeholder="Ej: Av. Aconquija 1234, Yerba Buena">
         </div>
 
-        <!-- ZONA DE DESTINO -->
         <div class="form-group">
-            <label>🏁 Zona de Destino</label>
-            <select id="destino" required>
-                <option value="" disabled selected>Seleccioná destino</option>
-                <option value="centro">Centro (San Miguel)</option>
-                <option value="norte">Norte (Yerba Buena / Tafi Viejo)</option>
-                <option value="sur">Sur (Agua Caliente / Kiosco)</option>
-                <option value="oeste">Oeste (Barrio Norte / 24 de Septiembre)</option>
-                <option value="este">Este (Bella Vista / Kilometro 14)</option>
-                <option value="prohibida">Zona Prohibida (No servimos)</option>
-            </select>
+            <label><span class="icon">🎯</span>Dirección de Entrega</label>
+            <input type="text" id="direccionEntrega" placeholder="Ej: Calle 24 de Septiembre 567, Centro">
         </div>
 
-        <!-- PESO -->
         <div class="form-group">
-            <label>⚖️ Peso (kg)</label>
-            <input type="number" id="peso" min="0.1" step="0.1" placeholder="Ej: 1.5" required>
+            <label><span class="icon">⚖️</span>Peso (kg)</label>
+            <input type="number" id="peso" placeholder="Ej: 1.5" min="0.1" step="0.1">
         </div>
 
-        <!-- CONDICIONES ESPECIALES -->
         <div class="form-group">
-            <label>🌤️ Condiciones Actuales</label>
+            <label><span class="icon">☀️</span>Condiciones Actuales</label>
             <select id="condicion">
                 <option value="normal">☀️ Día Normal</option>
-                <option value="lluvia">🌧️ Lluvia / Mal Tiempo</option>
-                <option value="demora">⏰ Horario Pico (Retraso)</option>
+                <option value="lluvia">🌧️ Está Lloviendo (+20%)</option>
+                <option value="pico">🕐 Horario Pico (18-20hs) (+15%)</option>
             </select>
         </div>
 
-        <button type="submit" class="btn btn-calc">Calcular Costo</button>
-    </form>
-
-    <div id="resultado">
-        <div class="res-row"><span>Base:</span> <span id="res-base">$0</span></div>
-        <div class="res-row"><span>Distancia (Zona):</span> <span id="res-dist">0 km</span></div>
-        <div class="res-row" id="row-descuento" style="color: var(--success); display:none;"><span>💰 Descuento:</span> <span id="res-desc">-$0</span></div>
-        <div class="res-row" id="row-recargo" style="color: var(--danger); display:none;"><span>⚠️ Recargo:</span> <span id="res-add">$0</span></div>
-        <div class="res-total">Total: <span id="res-total">$0</span></div>
+        <button onclick="calcular()">Calcular Costo</button>
         
-        <button id="btnWhatsapp" class="btn btn-whatsapp">📲 Enviar Pedido por WhatsApp</button>
-        <button type="button" id="btnReset" class="btn btn-reset">Limpiar</button>
+        <div class="error" id="error"></div>
+
+        <div class="result" id="resultado">
+            <h3>💰 Resumen del Envío</h3>
+            <div class="result-item">
+                <span class="result-label">Retiro:</span>
+                <span class="result-value" id="res-retiro"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Entrega:</span>
+                <span class="result-value" id="res-entrega"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Peso:</span>
+                <span class="result-value" id="res-peso"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Condición:</span>
+                <span class="result-value" id="res-condicion"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Distancia Est.:</span>
+                <span class="result-value" id="res-distancia"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Precio Base:</span>
+                <span class="result-value" id="res-base"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Recargos:</span>
+                <span class="result-value" id="res-recargos"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Descuentos:</span>
+                <span class="result-value" id="res-descuentos"></span>
+            </div>
+            <div class="total">
+                <span class="total-label">Total:</span>
+                <span class="total-value" id="res-total"></span>
+            </div>
+            <button class="whatsapp-btn" onclick="enviarWhatsapp()">📱 Enviar cotización por WhatsApp</button>
+        </div>
+
+        <div class="rules">
+            <h4>📋 Reglas de Tarifas:</h4>
+            <ul>
+                <li>Lluvia: +20% recargo</li>
+                <li>Horario Pico (18-20hs): +15% recargo</li>
+                <li>Zonas Lejanas (>25km): +$500 base</li>
+                <li>Descuento >5kg: -10%</li>
+            </ul>
+        </div>
     </div>
 
-    <div class="detalles-cambio">
-        <small>
-            <strong>Reglas de Tarifas:</strong><br>
-            • Lluvia: +20% recargo.<br>
-            • Horario Pico: +15% recargo.<br>
-            • Zonas Lejanas: +$500 base.<br>
-            • Descuento >5kg: -10%.
-        </small>
-    </div>
-</div>
+    <script>
+        const PRECIO_POR_KM = 120; // Precio por kilómetro
+        const TARIFA_BASE = 800;  // Tarifa mínima base
+        const NUMERO_WHATSAPP = "5493815727447";
 
-<script>
-    // CONFIGURACIÓN DE PRECIOS Y ZONAS
-    const PRECIO_BASE_KM = 100; // Precio por km de distancia estimada
-    const PRECIO_FIJO = 600; // Costo base por manejo
-    const PRECIO_POR_KG = 200; // Costo por kg extra
+        // Variables globales para guardar el último cálculo
+        let ultimoCalculo = null;
 
-    // Distancias estimadas entre zonas (en km) - Matriz simplificada
-    // 0:Centro, 1:Norte, 2:Sur, 3:Oeste, 4:Este, 5:Prohibida
-    const distancias = {
-        'centro': { 'centro': 0, 'norte': 15, 'sur': 12, 'oeste': 10, 'este': 8, 'prohibida': 0 },
-        'norte':  { 'centro': 15, 'norte': 0, 'sur': 25, 'oeste': 18, 'este': 20, 'prohibida': 0 },
-        'sur':    { 'centro': 12, 'norte': 25, 'sur': 0, 'oeste': 14, 'este': 10, 'prohibida': 0 },
-        'oeste':  { 'centro': 10, 'norte': 18, 'sur': 14, 'oeste': 0, 'este': 15, 'prohibida': 0 },
-        'este':   { 'centro': 8, 'norte': 20, 'sur': 10, 'oeste': 15, 'este': 0, 'prohibida': 0 },
-        'prohibida': { 'centro': 0, 'norte': 0, 'sur': 0, 'oeste': 0, 'este': 0, 'prohibida': 0 }
-    };
+        // Función para generar una distancia estimada basada en las direcciones
+        function estimarDistancia(direccion1, direccion2) {
+            // Convertimos las direcciones a valores numéricos usando hash
+            function stringToHash(string) {
+                let hash = 0;
+                if (string.length === 0) return hash;
+                for (let i = 0; i < string.length; i++) {
+                    const char = string.charCodeAt(i);
+                    hash = ((hash << 5) - hash) + char;
+                    hash = hash & hash; // Convertir a entero de 32 bits
+                }
+                return Math.abs(hash);
+            }
 
-    const form = document.getElementById('cotizadorForm');
-    const origenSelect = document.getElementById('origen');
-    const msgProhibida = document.getElementById('msg-prohibida');
-
-    // Validar zona prohibida en tiempo real
-    origenSelect.addEventListener('change', () => {
-        if (origenSelect.value === 'prohibida') {
-            msgProhibida.style.display = 'block';
-        } else {
-            msgProhibida.style.display = 'none';
-        }
-    });
-
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        const zonaOrigen = document.getElementById('origen').value;
-        const zonaDestino = document.getElementById('destino').value;
-        const peso = parseFloat(document.getElementById('peso').value);
-        const condicion = document.getElementById('condicion').value;
-
-        // 1. Validar Zona Prohibida
-        if (zonaOrigen === 'prohibida' || zonaDestino === 'prohibida') {
-            alert("❌ Lo sentimos, no realizamos envíos a/desde esta zona.");
-            return;
+            const hash1 = stringToHash(direccion1.toLowerCase().trim());
+            const hash2 = stringToHash(direccion2.toLowerCase().trim());
+            
+            // Combinamos los hashes para obtener un valor único
+            const combinedHash = (hash1 + hash2) % 10000;
+            
+            // Generamos una distancia entre 3 y 35 km basada en el hash
+            const distanciaBase = 3 + (combinedHash % 32); // 3 a 35 km
+            
+            // Añadimos una pequeña variación aleatoria para que no sea exactamente el mismo precio
+            const variacion = (Math.random() * 2) - 1; // -1 a +1 km
+            const distanciaFinal = Math.max(3, Math.min(35, distanciaBase + variacion));
+            
+            return Math.round(distanciaFinal * 10) / 10; // Redondear a 1 decimal
         }
 
-        // 2. Calcular Distancia
-        const km = distancias[zonaOrigen] [zonaDestino];
-        
-        // 3. Calcular Costo Base
-        let costo = PRECIO_FIJO + (km * PRECIO_BASE_KM) + (peso * PRECIO_POR_KG);
-
-        // 4. Aplicar Recargos y Descuentos
-        let recargoTotal = 0;
-        let descuentoTotal = 0;
-        let mensajeRecargo = "";
-
-        // Regla: Lluvia
-        if (condicion === 'lluvia') {
-            recargoTotal += (costo * 0.20); // +20%
-            mensajeRecargo += "Lluvia (+20%) ";
+        function mostrarError(mensaje) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = mensaje;
+            errorDiv.classList.add('show');
+            
+            // Ocultar error después de 5 segundos
+            setTimeout(() => {
+                errorDiv.classList.remove('show');
+            }, 5000);
         }
 
-        // Regla: Horario Pico
-        if (condicion === 'demora') {
-            recargoTotal += (costo * 0.15); // +15%
-            mensajeRecargo += "Horario Pico (+15%) ";
+        function calcular() {
+            const direccionRetiro = document.getElementById('direccionRetiro').value.trim();
+            const direccionEntrega = document.getElementById('direccionEntrega').value.trim();
+            const peso = parseFloat(document.getElementById('peso').value);
+            const condicion = document.getElementById('condicion').value;
+            const errorDiv = document.getElementById('error');
+            const resultadoDiv = document.getElementById('resultado');
+
+            errorDiv.classList.remove('show');
+            resultadoDiv.classList.remove('show');
+
+            if (!direccionRetiro || !direccionEntrega) {
+                mostrarError('⚠️ Por favor, ingresá las direcciones de retiro y entrega');
+                return;
+            }
+
+            if (direccionRetiro.toLowerCase() === direccionEntrega.toLowerCase()) {
+                mostrarError('⚠️ Las direcciones de retiro y entrega deben ser diferentes');
+                return;
+            }
+
+            if (!peso || peso <= 0) {
+                mostrarError('⚠️ Por favor, ingresá un peso válido');
+                return;
+            }
+
+            // Estimar distancia basada en las direcciones
+            const distancia = estimarDistancia(direccionRetiro, direccionEntrega);
+            
+            let precioBase = Math.max(TARIFA_BASE, Math.round(distancia * PRECIO_POR_KM));
+
+            // Recargos
+            let recargoLluvia = 0;
+            let recargoPico = 0;
+            let recargoZonaLejana = 0;
+
+            if (condicion === 'lluvia') {
+                recargoLluvia = precioBase * 0.20;
+            }
+
+            if (condicion === 'pico') {
+                recargoPico = precioBase * 0.15;
+            }
+
+            // Zonas lejanas (si la distancia es mayor a 25km)
+            if (distancia > 25) {
+                recargoZonaLejana = 500;
+            }
+
+            const subtotal = precioBase + recargoLluvia + recargoPico + recargoZonaLejana;
+
+            // Descuentos por volumen
+            let descuento = 0;
+            if (peso > 5) {
+                descuento = subtotal * 0.10;
+            }
+
+            const total = subtotal - descuento;
+
+            // Guardar el cálculo actual para usarlo en WhatsApp
+            ultimoCalculo = {
+                retiro: direccionRetiro,
+                entrega: direccionEntrega,
+                peso: peso,
+                condicion: condicion,
+                distancia: distancia,
+                precioBase: precioBase,
+                recargos: recargoLluvia + recargoPico + recargoZonaLejana,
+                descuento: descuento,
+                total: total
+            };
+
+            // Mostrar resultados
+            document.getElementById('res-retiro').textContent = direccionRetiro;
+            document.getElementById('res-entrega').textContent = direccionEntrega;
+            document.getElementById('res-peso').textContent = `${peso} kg`;
+            document.getElementById('res-condicion').textContent = condicion === 'normal' ? 'Día Normal' : condicion === 'lluvia' ? 'Lluvia' : 'Horario Pico';
+            document.getElementById('res-distancia').textContent = `${distancia} km`;
+            document.getElementById('res-base').textContent = `$${precioBase}`;
+            
+            const totalRecargos = recargoLluvia + recargoPico + recargoZonaLejana;
+            document.getElementById('res-recargos').textContent = totalRecargos > 0 ? `+$${totalRecargos.toFixed(0)}` : '$0';
+            
+            document.getElementById('res-descuentos').textContent = descuento > 0 ? `-$${descuento.toFixed(0)}` : '$0';
+            document.getElementById('res-total').textContent = `$${total.toFixed(0)}`;
+            
+            resultadoDiv.classList.add('show');
         }
 
-        // Regla: Descuento por volumen (>5kg)
-        if (peso > 5) {
-            descuentoTotal = costo * 0.10; // -10%
+        function enviarWhatsapp() {
+            if (!ultimoCalculo) {
+                mostrarError('⚠️ Primero calculá un costo');
+                return;
+            }
+
+            const c = ultimoCalculo;
+            const mensaje = `
+*🚚 Nuevo Envío - Messenger-flash*
+--------------------------
+📍 *Retiro:* ${c.retiro}
+🎯 *Entrega:* ${c.entrega}
+⚖️ *Peso:* ${c.peso} kg
+☀️ *Condición:* ${c.condicion === 'normal' ? 'Día Normal' : c.condicion === 'lluvia' ? 'Lluvia' : 'Pico'}
+📏 *Distancia Est:* ${c.distancia} km
+--------------------------
+💵 *Precio Base:* $${c.precioBase}
+📈 *Recargos:* $${c.recargos}
+📉 *Descuentos:* -$${c.descuento}
+--------------------------
+💰 *TOTAL:* $${c.total}
+            `.trim();
+
+            const url = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
         }
-
-        const total = costo + recargoTotal - descuentoTotal;
-
-        // 5. Mostrar Resultados
-        document.getElementById('res-base').textContent = '$' + (costo + recargoTotal).toFixed(0);
-        document.getElementById('res-dist').textContent = km + ' km';
-        
-        // Mostrar/Ocultar filas de recargos
-        const rowRecargo = document.getElementById('row-recargo');
-        const rowDescuento = document.getElementById('row-descuento');
-
-        if (recargoTotal > 0) {
-            rowRecargo.style.display = 'flex';
-            document.getElementById('res-add').textContent = '+$' + recargoTotal.toFixed(0) + ' (' + mensajeRecargo + ')';
-        } else {
-            rowRecargo.style.display = 'none';
-        }
-
-        if (descuentoTotal > 0) {
-            rowDescuento.style.display = 'flex';
-            document.getElementById('res-desc').textContent = '-$' + descuentoTotal.toFixed(0);
-        } else {
-            rowDescuento.style.display = 'none';
-        }
-
-        document.getElementById('res-total').textContent = '$' + total.toFixed(0);
-        
-        // Mostrar botón WhatsApp
-        document.getElementById('resultado').style.display = 'block';
-        const btnWhatsapp = document.getElementById('btnWhatsapp');
-        btnWhatsapp.style.display = 'block';
-        
-        // Configurar mensaje de WhatsApp
-        const mensaje = `📦 *Nueva Cotización*%0A%0A📍 De: ${origenSelect.options[origenSelect.selectedIndex].text}%0A🏁 A: ${document.getElementById('destino').value}%0A⚖️ Peso: ${peso} kg%0A🌤️ Condición: ${condicion.toUpperCase()}%0A%0A💰 *Total Estimado: $${total.toFixed(0)}*`;
-        
-        btnWhatsapp.onclick = () => {
-            window.open(`https://wa.me/?text=${mensaje}`, '_blank');
-        };
-    });
-
-    document.getElementById('btnReset').addEventListener('click', () => {
-        form.reset();
-        document.getElementById('resultado').style.display = 'none';
-        msgProhibida.style.display = 'none';
-    });
-</script>
-
+    </script>
 </body>
-                    </html>
+    </html>
