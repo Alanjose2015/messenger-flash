@@ -62,7 +62,9 @@
             font-size: 16px;
         }
 
-        select, input[type="number"], input[type="text"] {
+        input[type="text"],
+        input[type="number"],
+        select {
             width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
@@ -71,7 +73,8 @@
             transition: all 0.3s;
         }
 
-        select:focus, input:focus {
+        input:focus,
+        select:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -94,10 +97,6 @@
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        button:active {
-            transform: translateY(0);
         }
 
         .result {
@@ -135,8 +134,6 @@
 
         .result-item:last-child {
             border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
         }
 
         .result-label {
@@ -193,65 +190,51 @@
             display: block;
         }
 
-        .rules {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            font-size: 12px;
-            color: #7f8c8d;
-        }
-
-        .rules h4 {
-            color: #34495e;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        .rules ul {
-            list-style-position: inside;
-        }
-
-        .rules li {
-            margin-bottom: 5px;
+        .note {
+            font-size: 11px;
+            color: #e74c3c;
+            margin-top: 5px;
+            font-style: italic;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🚚 Messenger-flash</h1>
-        <p class="subtitle">Cadetería Tucumán - Cotizador Inteligente</p>
+        <p class="subtitle">Cadetería Tucumán - Cotización Rápida</p>
         
+        <!-- Campos de texto para direcciones exactas -->
         <div class="form-group">
-            <label><span class="icon">📍</span>Dirección de Retiro</label>
-            <input type="text" id="direccionRetiro" placeholder="Ej: Av. Aconquija 1234, Yerba Buena">
+            <label><span class="icon">📍</span>Dirección de Retiro (Exacta)</label>
+            <input type="text" id="direccionRetiro" placeholder="Ej: Av. Aconquija 1234, Yerba Buena" required>
         </div>
 
         <div class="form-group">
-            <label><span class="icon">🎯</span>Dirección de Entrega</label>
-            <input type="text" id="direccionEntrega" placeholder="Ej: Calle 24 de Septiembre 567, Centro">
+            <label><span class="icon">🎯</span>Dirección de Entrega (Exacta)</label>
+            <input type="text" id="direccionEntrega" placeholder="Ej: Calle 24 de Septiembre 567, Centro" required>
         </div>
 
         <div class="form-group">
             <label><span class="icon">⚖️</span>Peso (kg)</label>
-            <input type="number" id="peso" placeholder="Ej: 1.5" min="0.1" step="0.1">
+            <input type="number" id="peso" placeholder="Ej: 5" min="0.1" step="0.1" required>
         </div>
 
         <div class="form-group">
-            <label><span class="icon">☀️</span>Condiciones Actuales</label>
+            <label><span class="icon">☀️</span>Condiciones</label>
             <select id="condicion">
                 <option value="normal">☀️ Día Normal</option>
-                <option value="lluvia">🌧️ Está Lloviendo (+20%)</option>
-                <option value="pico">🕐 Horario Pico (18-20hs) (+15%)</option>
+                <option value="lluvia">🌧️ Lluvia (+20%)</option>
+                <option value="pico">🕐 Horario Pico (+15%)</option>
             </select>
         </div>
 
-        <button onclick="calcular()">Calcular Costo</button>
+        <button onclick="calcular()">Calcular Estimado</button>
         
         <div class="error" id="error"></div>
 
         <div class="result" id="resultado">
-            <h3>💰 Resumen del Envío</h3>
+            <h3>💰 Resumen de Solicitud</h3>
             <div class="result-item">
                 <span class="result-label">Retiro:</span>
                 <span class="result-value" id="res-retiro"></span>
@@ -264,203 +247,96 @@
                 <span class="result-label">Peso:</span>
                 <span class="result-value" id="res-peso"></span>
             </div>
-            <div class="result-item">
-                <span class="result-label">Condición:</span>
-                <span class="result-value" id="res-condicion"></span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Distancia Est.:</span>
-                <span class="result-value" id="res-distancia"></span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Precio Base:</span>
-                <span class="result-value" id="res-base"></span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Recargos:</span>
-                <span class="result-value" id="res-recargos"></span>
-            </div>
-            <div class="result-item">
-                <span class="result-label">Descuentos:</span>
-                <span class="result-value" id="res-descuentos"></span>
-            </div>
             <div class="total">
-                <span class="total-label">Total:</span>
+                <span class="total-label">Estimado:</span>
                 <span class="total-value" id="res-total"></span>
             </div>
-            <button class="whatsapp-btn" onclick="enviarWhatsapp()">📱 Enviar cotización por WhatsApp</button>
-        </div>
-
-        <div class="rules">
-            <h4>📋 Reglas de Tarifas:</h4>
-            <ul>
-                <li>Lluvia: +20% recargo</li>
-                <li>Horario Pico (18-20hs): +15% recargo</li>
-                <li>Zonas Lejanas (>25km): +$500 base</li>
-                <li>Descuento >5kg: -10%</li>
-            </ul>
+            <p class="note">*Precio estimado. Confirmá el envío por WhatsApp.</p>
+            <button class="whatsapp-btn" onclick="enviarWhatsapp()">📱 Enviar Solicitud por WhatsApp</button>
         </div>
     </div>
 
     <script>
-        const PRECIO_POR_KM = 120; // Precio por kilómetro
-        const TARIFA_BASE = 800;  // Tarifa mínima base
+        const PRECIO_POR_KM = 120;
+        const TARIFA_BASE = 800;
         const NUMERO_WHATSAPP = "5493815727447";
 
-        // Variables globales para guardar el último cálculo
-        let ultimoCalculo = null;
-
-        // Función para generar una distancia estimada basada en las direcciones
-        function estimarDistancia(direccion1, direccion2) {
-            // Convertimos las direcciones a valores numéricos usando hash
-            function stringToHash(string) {
-                let hash = 0;
-                if (string.length === 0) return hash;
-                for (let i = 0; i < string.length; i++) {
-                    const char = string.charCodeAt(i);
-                    hash = ((hash << 5) - hash) + char;
-                    hash = hash & hash; // Convertir a entero de 32 bits
-                }
-                return Math.abs(hash);
-            }
-
-            const hash1 = stringToHash(direccion1.toLowerCase().trim());
-            const hash2 = stringToHash(direccion2.toLowerCase().trim());
-            
-            // Combinamos los hashes para obtener un valor único
-            const combinedHash = (hash1 + hash2) % 10000;
-            
-            // Generamos una distancia entre 3 y 35 km basada en el hash
-            const distanciaBase = 3 + (combinedHash % 32); // 3 a 35 km
-            
-            // Añadimos una pequeña variación aleatoria para que no sea exactamente el mismo precio
-            const variacion = (Math.random() * 2) - 1; // -1 a +1 km
-            const distanciaFinal = Math.max(3, Math.min(35, distanciaBase + variacion));
-            
-            return Math.round(distanciaFinal * 10) / 10; // Redondear a 1 decimal
-        }
+        let ultimoDato = null;
 
         function mostrarError(mensaje) {
             const errorDiv = document.getElementById('error');
             errorDiv.textContent = mensaje;
             errorDiv.classList.add('show');
-            
-            // Ocultar error después de 5 segundos
-            setTimeout(() => {
-                errorDiv.classList.remove('show');
-            }, 5000);
+            setTimeout(() => errorDiv.classList.remove('show'), 5000);
         }
 
         function calcular() {
-            const direccionRetiro = document.getElementById('direccionRetiro').value.trim();
-            const direccionEntrega = document.getElementById('direccionEntrega').value.trim();
+            const dirRetiro = document.getElementById('direccionRetiro').value.trim();
+            const dirEntrega = document.getElementById('direccionEntrega').value.trim();
             const peso = parseFloat(document.getElementById('peso').value);
             const condicion = document.getElementById('condicion').value;
-            const errorDiv = document.getElementById('error');
             const resultadoDiv = document.getElementById('resultado');
 
-            errorDiv.classList.remove('show');
+            document.getElementById('error').classList.remove('show');
             resultadoDiv.classList.remove('show');
 
-            if (!direccionRetiro || !direccionEntrega) {
-                mostrarError('⚠️ Por favor, ingresá las direcciones de retiro y entrega');
+            if (!dirRetiro || !dirEntrega) {
+                mostrarError('⚠️ Ingresá las direcciones exactas');
                 return;
             }
-
-            if (direccionRetiro.toLowerCase() === direccionEntrega.toLowerCase()) {
-                mostrarError('⚠️ Las direcciones de retiro y entrega deben ser diferentes');
+            if (dirRetiro.toLowerCase() === dirEntrega.toLowerCase()) {
+                mostrarError('⚠️ Las direcciones deben ser diferentes');
                 return;
             }
-
             if (!peso || peso <= 0) {
-                mostrarError('⚠️ Por favor, ingresá un peso válido');
+                mostrarError('⚠️ Ingresá un peso válido');
                 return;
             }
 
-            // Estimar distancia basada en las direcciones
-            const distancia = estimarDistancia(direccionRetiro, direccionEntrega);
+            // Estimación simple basada en peso y condiciones
+            let estimado = TARIFA_BASE + (peso * 50);
             
-            let precioBase = Math.max(TARIFA_BASE, Math.round(distancia * PRECIO_POR_KM));
+            if (condicion === 'lluvia') estimado *= 1.20;
+            if (condicion === 'pico') estimado *= 1.15;
+            if (peso > 5) estimado *= 0.90; // Descuento por volumen
 
-            // Recargos
-            let recargoLluvia = 0;
-            let recargoPico = 0;
-            let recargoZonaLejana = 0;
+            const total = Math.round(estimado);
 
-            if (condicion === 'lluvia') {
-                recargoLluvia = precioBase * 0.20;
-            }
-
-            if (condicion === 'pico') {
-                recargoPico = precioBase * 0.15;
-            }
-
-            // Zonas lejanas (si la distancia es mayor a 25km)
-            if (distancia > 25) {
-                recargoZonaLejana = 500;
-            }
-
-            const subtotal = precioBase + recargoLluvia + recargoPico + recargoZonaLejana;
-
-            // Descuentos por volumen
-            let descuento = 0;
-            if (peso > 5) {
-                descuento = subtotal * 0.10;
-            }
-
-            const total = subtotal - descuento;
-
-            // Guardar el cálculo actual para usarlo en WhatsApp
-            ultimoCalculo = {
-                retiro: direccionRetiro,
-                entrega: direccionEntrega,
+            ultimoDato = {
+                retiro: dirRetiro,
+                entrega: dirEntrega,
                 peso: peso,
                 condicion: condicion,
-                distancia: distancia,
-                precioBase: precioBase,
-                recargos: recargoLluvia + recargoPico + recargoZonaLejana,
-                descuento: descuento,
                 total: total
             };
 
-            // Mostrar resultados
-            document.getElementById('res-retiro').textContent = direccionRetiro;
-            document.getElementById('res-entrega').textContent = direccionEntrega;
+            document.getElementById('res-retiro').textContent = dirRetiro;
+            document.getElementById('res-entrega').textContent = dirEntrega;
             document.getElementById('res-peso').textContent = `${peso} kg`;
-            document.getElementById('res-condicion').textContent = condicion === 'normal' ? 'Día Normal' : condicion === 'lluvia' ? 'Lluvia' : 'Horario Pico';
-            document.getElementById('res-distancia').textContent = `${distancia} km`;
-            document.getElementById('res-base').textContent = `$${precioBase}`;
-            
-            const totalRecargos = recargoLluvia + recargoPico + recargoZonaLejana;
-            document.getElementById('res-recargos').textContent = totalRecargos > 0 ? `+$${totalRecargos.toFixed(0)}` : '$0';
-            
-            document.getElementById('res-descuentos').textContent = descuento > 0 ? `-$${descuento.toFixed(0)}` : '$0';
-            document.getElementById('res-total').textContent = `$${total.toFixed(0)}`;
+            document.getElementById('res-total').textContent = `$${total}`;
             
             resultadoDiv.classList.add('show');
         }
 
         function enviarWhatsapp() {
-            if (!ultimoCalculo) {
-                mostrarError('⚠️ Primero calculá un costo');
+            if (!ultimoDato) {
+                mostrarError('⚠️ Primero calculá el estimado');
                 return;
             }
 
-            const c = ultimoCalculo;
+            const d = ultimoDato;
+            const condicionTexto = d.condicion === 'normal' ? 'Día Normal' : d.condicion === 'lluvia' ? 'Lluvia' : 'Horario Pico';
+
+            // Mensaje que te llega a TU WhatsApp con las direcciones EXACTAS
             const mensaje = `
-*🚚 Nuevo Envío - Messenger-flash*
+*🚚 Nueva Solicitud - Messenger-flash*
 --------------------------
-📍 *Retiro:* ${c.retiro}
-🎯 *Entrega:* ${c.entrega}
-⚖️ *Peso:* ${c.peso} kg
-☀️ *Condición:* ${c.condicion === 'normal' ? 'Día Normal' : c.condicion === 'lluvia' ? 'Lluvia' : 'Pico'}
-📏 *Distancia Est:* ${c.distancia} km
+📍 *Retiro:* ${d.retiro}
+🎯 *Entrega:* ${d.entrega}
+⚖️ *Peso:* ${d.peso} kg
+☀️ *Condición:* ${condicionTexto}
 --------------------------
-💵 *Precio Base:* $${c.precioBase}
-📈 *Recargos:* $${c.recargos}
-📉 *Descuentos:* -$${c.descuento}
---------------------------
-💰 *TOTAL:* $${c.total}
+💰 *Precio estimado:* $${d.total}
             `.trim();
 
             const url = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensaje)}`;
