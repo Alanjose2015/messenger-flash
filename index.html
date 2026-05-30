@@ -92,7 +92,6 @@
 
             <form id="formularioEnvio" class="space-y-6 relative z-10" onsubmit="return false;">
 
-                <!-- ✅ CAMPO NOMBRE DEL CLIENTE -->
                 <div class="bg-blue-50/80 p-5 rounded-2xl border border-blue-200 shadow-sm">
                     <label class="block text-base font-bold text-primary mb-3 flex items-center gap-3">
                         <i class="fa fa-user-circle text-accent text-xl"></i> IDENTIFÍCATE - NOMBRE COMPLETO
@@ -101,7 +100,6 @@
                         class="w-full px-5 py-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent transition-custom input-movil bg-white/80" required>
                 </div>
 
-                <!-- ✅ DIRECCIÓN DE RETIRO -->
                 <div class="bg-red-50/80 p-5 rounded-2xl border border-red-200 shadow-sm">
                     <label class="block text-base font-bold text-primary mb-3 flex items-center gap-3">
                         <i class="fa fa-map-marker text-red-500 text-xl"></i> DIRECCIÓN DE RETIRO <span class="text-xs font-normal text-gray-600">(Exacta)</span>
@@ -111,7 +109,6 @@
                     <p class="text-xs text-gray-600 mt-2">* Calle, Número y Localidad</p>
                 </div>
 
-                <!-- ✅ DIRECCIÓN DE ENTREGA -->
                 <div class="bg-green-50/80 p-5 rounded-2xl border border-green-200 shadow-sm">
                     <label class="block text-base font-bold text-primary mb-3 flex items-center gap-3">
                         <i class="fa fa-map-pin text-green-600 text-xl"></i> DIRECCIÓN DE ENTREGA <span class="text-xs font-normal text-gray-600">(Exacta)</span>
@@ -121,7 +118,6 @@
                     <p class="text-xs text-gray-600 mt-2">* Calle, Número y Localidad</p>
                 </div>
 
-                <!-- ✅ DESPLEGABLE COMPLETO -->
                 <div class="bg-yellow-50/80 p-5 rounded-2xl border border-yellow-200 shadow-sm">
                     <label class="block text-base font-bold text-primary mb-3 flex items-center gap-3">
                         <i class="fa fa-list-alt text-secondary text-xl"></i> ¿QUÉ VAS A ENVIAR?
@@ -139,10 +135,8 @@
                     <p id="avisoTipo" class="text-sm text-red-600 font-medium mt-2 h-6"></p>
                 </div>
 
-                <!-- 🗺️ MAPA -->
                 <div id="mapa" class="mt-6 hidden rounded-2xl overflow-hidden shadow-lg"></div>
 
-                <!-- 💰 RESULTADOS -->
                 <div id="resultados" class="mt-6 p-6 rounded-2xl bg-gradient-to-r from-blue-100 to-yellow-100 border-2 border-accent/30 hidden transition-custom shadow-lg">
                     <h3 class="font-bold text-primary text-xl mb-4 text-center">📋 RESUMEN DEL SERVICIO</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
@@ -161,22 +155,28 @@
                     </div>
                 </div>
 
-                <!-- 🚀 BOTÓN CALCULAR -->
                 <button type="button" onclick="calcularRuta()"
-                    class="w-full bg-gradient-to-r from-accent to-blue-700 hover:from-blue-700 hover:to-accent text-white font-bold py-5 px-6 rounded-2xl text-lg uppercase tracking-wider box-glow transition-custom transform hover:scale-[1.03] active:scale-[0.97] min-h-[55px]">
+                    class="w-full bg-gradient-to-r from-accent to-blue-700 hover:from-blue-700 hover:to-accent text-white font-bold py-3 px-4 rounded-2xl text-base uppercase tracking-wider box-glow transition-custom transform hover:scale-[1.03] active:scale-[0.97] min-h-[45px]">
                     🚀 Calcular Precio Exacto
                 </button>
 
-                <!-- ✅ BOTÓN WHATSAPP (SE MUESTRA SIEMPRE DESPUÉS DE CALCULAR) -->
                 <a id="botonWhatsapp" href="#" target="_blank" rel="noopener noreferrer"
-                    class="hidden w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-5 px-6 rounded-2xl text-lg text-center uppercase tracking-wider box-glow-yellow transition-custom transform hover:scale-[1.03] active:scale-[0.97] min-h-[55px] mt-4">
+                    class="hidden w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-6 rounded-2xl text-lg text-center uppercase tracking-wider box-glow-yellow transition-custom transform hover:scale-[1.03] active:scale-[0.97] min-h-[55px] mt-4">
                     <i class="fa fa-whatsapp mr-2 text-xl"></i> Pedir Cadete Ahora
                 </a>
+
+                <div id="avisosExtra" class="hidden mt-3 space-y-2 text-center px-2">
+                    <p class="text-sm text-gray-700 bg-yellow-50 p-2 rounded-lg border border-yellow-200">
+                        ⚠️ Valores estimados: tenés descuentos del 10%, 15% o 20% según uso, ¡sumás beneficios cada vez más!
+                    </p>
+                    <p class="text-sm text-red-700 bg-red-50 p-2 rounded-lg border border-red-200">
+                        ⚠️ Recargos por: demoras, alta demanda, días no laborables o lluvia.
+                    </p>
+                </div>
 
             </form>
         </main>
 
-        <!-- ✅ PIE DE PÁGINA - CORREO BIEN OCULTO -->
         <footer class="mt-12 text-center text-white/80 text-sm px-4">
             <p class="mb-3 font-medium">© 2026 MESSENGER-FLASH - Mensajería en Todo el Territorio de Tucumán</p>
             <div class="mt-2">
@@ -188,16 +188,13 @@
             </div>
         </footer>
     </div>
-
     <script>
-        // 📊 TARIFAS
         const TARIFA_BASE = 1800;
         const PRECIO_POR_KM = 400;
         const RECARGO_FRAGIL = 1000;
         const RECARGO_COMIDA = 350;
         const RECARGO_DOCUMENTO = 200;
 
-        // ✅ TU NÚMERO DE WHATSAPP
         const NUMERO_WHATSAPP = "5493815727447"; 
 
         let mapa;
@@ -212,7 +209,6 @@
             }
         });
 
-        // ✅ FUNCIÓN PRINCIPAL - YA NO RECARGA LA PÁGINA
         async function calcularRuta() {
             const nombreCliente = document.getElementById('nombreCliente').value.trim();
             let origen = document.getElementById('origen').value.trim();
@@ -225,19 +221,15 @@
             }
 
             try {
-                // ✅ MEJORO LA DIRECCIÓN
                 origen = limpiarDireccion(origen) + ", Tucumán, Argentina";
                 destino = limpiarDireccion(destino) + ", Tucumán, Argentina";
 
-                // 🔍 BÚSQUEDA
                 let coordOrigen = await buscarVariasFormas(origen);
                 let coordDestino = await buscarVariasFormas(destino);
 
-                // 🛡️ SI NO ENCUENTRA: usa ubicación de prueba
                 if (!coordOrigen) coordOrigen = [-26.8300, -65.2230];
                 if (!coordDestino) coordDestino = [-26.8240, -65.2400];
 
-                // ✅ CÁLCULO
                 const distanciaKm = calcularDistanciaDirecta(coordOrigen, coordDestino);
                 const tiempoMin = Math.round(distanciaKm * 2.2);
 
@@ -252,16 +244,14 @@
                 tarifaTotal = Math.round(tarifaTotal);
                 const distanciaFormateada = distanciaKm.toFixed(2);
 
-                // ✅ MOSTRAR RESULTADOS
                 document.getElementById('distanciaValor').textContent = distanciaFormateada;
                 document.getElementById('tiempoValor').textContent = tiempoMin;
                 document.getElementById('tarifaValor').textContent = tarifaTotal;
                 document.getElementById('resultados').classList.remove('hidden');
                 
-                // ✅ APARECE WHATSAPP
                 document.getElementById('botonWhatsapp').classList.remove('hidden');
+                document.getElementById('avisosExtra').classList.remove('hidden');
 
-                // ✅ MENSAJE
                 const mensaje = encodeURIComponent(
                     `Hola, soy ${nombreCliente}. Quiero pedir un cadete.%0A%0A` +
                     `📤 Retiro: ${document.getElementById('origen').value.trim()}%0A` +
@@ -272,7 +262,6 @@
                 );
                 document.getElementById('botonWhatsapp').href = `https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`;
 
-                // ✅ MOSTRAR MAPA
                 mostrarMapa(coordOrigen, coordDestino);
 
                 setTimeout(() => {
@@ -280,17 +269,16 @@
                 }, 100);
 
             } catch (error) {
-                // ✅ SI FALLA, IGUAL CALCULA
                 alert("✅ Precio calculado correctamente");
                 document.getElementById('distanciaValor').textContent = "1.50";
                 document.getElementById('tiempoValor').textContent = "5";
                 document.getElementById('tarifaValor').textContent = TARIFA_BASE + (tipoEnvio === 'fragil' ? RECARGO_FRAGIL : 0);
                 document.getElementById('resultados').classList.remove('hidden');
                 document.getElementById('botonWhatsapp').classList.remove('hidden');
+                document.getElementById('avisosExtra').classList.remove('hidden');
             }
         }
 
-        // ✅ LIMPIA DIRECCIONES
         function limpiarDireccion(texto) {
             texto = texto.replace(/al|y|esq|esquina|n°/gi, ' ');
             texto = texto.replace(/san migu/gi, 'San Miguel de Tucumán');
@@ -299,7 +287,6 @@
             return texto.trim();
         }
 
-        // ✅ BÚSQUEDA INTELIGENTE
         async function buscarVariasFormas(direccion) {
             let res = await obtenerCoordenadas(direccion);
             if (res) return res;
@@ -312,7 +299,6 @@
             return await obtenerCoordenadas(partes[0] + ", Tucumán");
         }
 
-        // ✅ COORDENADAS
         async function obtenerCoordenadas(direccion) {
             try {
                 const respuesta = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion)}&limit=1&countrycodes=AR`, {
@@ -325,7 +311,6 @@
             } catch { return null; }
         }
 
-        // ✅ DISTANCIA
         function calcularDistanciaDirecta(p1, p2) {
             const R = 6371;
             const dLat = (p2[0]-p1[0]) * Math.PI / 180;
@@ -340,7 +325,6 @@
             return R * c;
         }
 
-        // ✅ MAPA
         function mostrarMapa(origen, destino) {
             const contenedorMapa = document.getElementById('mapa');
             contenedorMapa.classList.remove('hidden');
@@ -364,7 +348,6 @@
             mapa.fitBounds(puntos.getBounds(), {padding: [20,20]});
         }
 
-        // ✅ VER CORREO
         document.getElementById('verCorreoBtn').addEventListener('click', function() {
             document.getElementById('correoOculto').textContent = "Contacto:";
             document.getElementById('correoReal').classList.remove('hidden');
