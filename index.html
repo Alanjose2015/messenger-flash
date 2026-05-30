@@ -9,94 +9,258 @@
         body {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            display: flex; justify-content: center; align-items: center;
+            display: flex; justify-content: center; align-items: flex-start;
             min-height: 100vh; padding: 16px;
         }
         .app-container {
             width: 100%; max-width: 410px; background: #ffffff;
             border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            padding: 30px; text-align: center;
-            animation: fadeInUp 0.8s ease-out;
+            padding: 24px; display: flex; flex-direction: column; gap: 20px;
         }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .header { text-align: center; }
+        .section-title {
+            font-size: 22px; font-weight: 800; color: #0f172a;
+            padding-bottom: 10px; border-bottom: 2px solid #f1f5f9; margin-bottom: 10px;
         }
-        .header h1 {
-            font-size: 24px; font-weight: 800; color: #0f172a; margin-bottom: 5px;
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label {
+            font-size: 12px; font-weight: 700; color: #64748b;
+            text-transform: uppercase; letter-spacing: 0.5px;
         }
-        .header p { color: #64748b; font-size: 14px; margin-bottom: 30px; }
+        .input-text {
+            width: 100%; padding: 14px; font-size: 16px; color: #0f172a;
+            background-color: #f8fafc; border: 2px solid #e2e8f0;
+            border-radius: 12px; outline: none; font-weight: 600; transition: all 0.2s;
+        }
+        .input-text:focus {
+            border-color: #3b82f6; background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        }
+        #destino { border: 2px solid #ffedd5; background-color: #fff7ed; color: #c2410c; }
+        #destino:focus { border-color: #ea580c; background-color: #ffffff; box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.15); }
         
-        /* TARJETA PROMOCIONAL (Lo único que se verá) */
-        .promo-card {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            border-radius: 20px;
-            padding: 35px 20px;
-            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+        /* Botones */
+        .btn {
+            width: 100%; padding: 15px; border: none; border-radius: 12px;
+            font-size: 16px; font-weight: 700; cursor: pointer;
+            text-align: center; transition: transform 0.1s; color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2); margin-bottom: 10px;
+        }
+        .btn:active { transform: scale(0.98); }
+        
+        .btn-calcular {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            display: none; /* Oculto hasta calcular */
+        }
+        
+        /* Área de Precio Mejorada */
+        .price-display {
+            background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 16px;
+            padding: 20px; text-align: center; margin: 10px 0;
+            display: none; /* Oculto inicialmente */
             position: relative;
             overflow: hidden;
         }
-        .promo-title {
-            font-size: 28px; font-weight: 900; margin-bottom: 15px;
-            text-transform: uppercase; letter-spacing: 1px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        .price-display.visible { display: block; animation: fadeIn 0.5s ease-in; }
+        
+        .price-label { font-size: 14px; color: #64748b; font-weight: 600; margin-bottom: 5px; }
+        .price-value { font-size: 36px; font-weight: 800; color: #0f172a; letter-spacing: -1px; }
+        
+        /* Mensaje Promocional dentro del precio */
+        .promo-badge {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            margin: 10px auto;
+            max-width: 90%;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+            text-align: center;
         }
-        .promo-text {
-            font-size: 18px; line-height: 1.5; margin-bottom: 25px;
-            font-weight: 500;
+        .promo-badge strong { color: #d1fae5; }
+        
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
+            margin-top: 10px; background: #e2e8f0; color: #475569;
         }
-        .highlight { color: #d1fae5; font-weight: 800; font-size: 20px; }
-        .slogan {
-            background: rgba(255, 255, 255, 0.2);
-            display: inline-block; padding: 8px 20px; border-radius: 50px;
-            font-size: 14px; font-weight: 700; margin-top: 10px;
-            border: 1px solid rgba(255,255,255,0.3);
+        .status-badge.active { background: #fee2e2; color: #dc2626; }
+        .status-badge.warning { background: #fef3c7; color: #d97706; }
+        .status-badge.success { background: #dcfce7; color: #16a34a; }
+        
+        .info-text { font-size: 12px; color: #94a3b8; text-align: center; margin-top: 10px; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .btn-whatsapp {
-            background-color: #25D366; color: white; border: none;
-            width: 100%; padding: 16px; font-size: 18px; font-weight: 800;
-            border-radius: 50px; cursor: pointer; margin-top: 30px;
-            box-shadow: 0 6px 15px rgba(37, 211, 102, 0.4);
-            transition: all 0.3s ease; display: flex; align-items: center;
-            justify-content: center; gap: 10px; text-transform: uppercase;
-        }
-        .btn-whatsapp:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(37, 211, 102, 0.6); }
-        .footer-note { margin-top: 25px; font-size: 12px; color: #94a3b8; font-style: italic; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
         <div class="header">
-            <h1>⚡ Messenger Flash</h1>
-            <p>Tucumán - Ofertas Exclusivas</p>
+            <h1 class="section-title">⚡ Messenger Flash</h1>
+            <p style="color: #64748b; font-size: 14px;">Cotizador Inteligente Tucumán</p>
         </div>
 
-        <!-- AQUÍ ESTÁ EL MENSAJE LLAMATIVO -->
-        <div class="promo-card">
-            <div class="promo-title">¡PIDE TU COTIZACIÓN AHORA!</div>
-            <div class="promo-text">
-                Descuentos del <span class="highlight">5%, 10%, 15%</span> y hasta el <span class="highlight">20%</span> en tus viajes.
-            </div>
-            <div class="slogan">✨ ¡Cuanto más usas la web, menos pagas! ✨</div>
-            
-            <button class="btn-whatsapp" onclick="enviarWhatsApp()">
-                <span>📲</span> ¡Quiero mi descuento!
-            </button>
+        <div class="form-group">
+            <label for="origen">📍 Origen (Retiro)</label>
+            <input type="text" id="origen" class="input-text" placeholder="Ej: Av Aconquija 1200">
         </div>
+
+        <div class="form-group">
+            <label for="destino">🏁 Destino (Entrega)</label>
+            <input type="text" id="destino" class="input-text" placeholder="Ej: Uruguay 4300">
+        </div>
+
+        <!-- BOTÓN DE CALCULAR -->
+        <button id="btnCalcular" class="btn btn-calcular">
+            🧮 Calcular Precio con Descuento
+        </button>
+
+        <!-- ÁREA DE PRECIO MEJORADA -->
+        <div id="priceDisplay" class="price-display">
+            <div class="price-label">PRECIO ESTIMADO (SIN DESCUENTO)</div>
+            <div class="price-value" id="txtPrecio">$0</div>
+            
+            <!-- MENSAJE PROMOCIONAL LLAMATIVO -->
+            <div class="promo-badge">
+                🚀 ¡Pide tu cotización AHORA!<br>
+                Descuentos del <strong>5%, 10%, 15% y hasta 20%</strong><br>
+                <span style="font-size: 11px; display: block; margin-top: 4px;">✨ ¡Cuanto más usas la web, menos pagas!</span>
+            </div>
+
+            <div id="statusContainer"></div>
+        </div>
+
+        <!-- BOTÓN DE WHATSAPP -->
+        <button id="btnWhatsApp" class="btn btn-whatsapp">
+            📲 Confirmar y Aplicar Descuento
+        </button>
         
-        <p class="footer-note">*Los descuentos se aplican directamente en el chat.</p>
+        <p class="info-text">*El precio final se ajusta al confirmar por WhatsApp aplicando tu descuento progresivo.</p>
     </div>
 
     <script>
-        function enviarWhatsApp() {
-            const numero = "5493815727447";
-            const mensaje = "Hola! Quiero pedir una cotización y aprovechar los descuentos del 5%, 10%, 15% o 20%. ¡Necesito un viaje!";
-            const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
-            window.open(url, '_blank');
-        }
-    </script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const origenInput = document.getElementById("origen");
+            const destinoInput = document.getElementById("destino");
+            const btnCalcular = document.getElementById("btnCalcular");
+            const btnWhatsApp = document.getElementById("btnWhatsApp");
+            const txtPrecio = document.getElementById("txtPrecio");
+            const statusContainer = document.getElementById("statusContainer");
+            const priceDisplay = document.getElementById("priceDisplay");
 
+            const NUMERO_WHATSAPP = "5493815727447";
+            const TARIFA_BASE = 1000;
+            const PRECIO_POR_KM = 800;
+            const EXTRA_ZONA_ROJA = 500;
+
+            function estimarKilometros(orig, dest) {
+                const texto = (orig + " " + dest).toLowerCase();
+                if (texto.includes("aconquija") && (texto.includes("centro") || texto.includes("roca") || texto.includes("jujuy") || texto.includes("uruguay"))) return 8.2;
+                if (texto.includes("jujuy") && texto.includes("uruguay")) return 2.7;
+                if (texto.includes("banda") || texto.includes("talitas") || texto.includes("aldelertes")) return 6.5;
+                if (texto.includes("aconquija") && (texto.includes("solano") || texto.includes("peron"))) return 4.5;
+                return 3.5;
+            }
+
+            function esZonaRoja(orig, dest) {
+                const texto = (orig + " " + dest).toLowerCase();
+                return texto.includes("san javier") || texto.includes("banda") || texto.includes("talitas") || texto.includes("tafí viejo");
+            }
+
+            function calcularPrecio() {
+                const origen = origenInput.value.trim();
+                const destino = destinoInput.value.trim();
+
+                if (!origen || !destino) {
+                    alert("Por favor, ingresa origen y destino para cotizar.");
+                    return;
+                }
+
+                const km = estimarKilometros(origen, destino);
+                let costo = TARIFA_BASE + (km * PRECIO_POR_KM);
+                let multiplicador = 1.0;
+                let badges = [];
+
+                // Factores dinámicos
+                const hora = new Date().getHours();
+                if (hora >= 22 || hora < 6) {
+                    multiplicador += 0.30;
+                    badges.push({ text: "🌙 Nocturno", class: "warning" });
+                }
+
+                const dia = new Date().getDay();
+                const esFinDeSemana = (dia === 0 || dia === 6);
+                const esHoraPunta = (hora >= 18 && hora < 22);
+                
+                if (esFinDeSemana || esHoraPunta || Math.random() < 0.3) {
+                    multiplicador += 0.50;
+                    badges.push({ text: "🌧️ Alta Demanda", class: "active" });
+                }
+
+                if (esZonaRoja(origen, destino)) {
+                    costo += EXTRA_ZONA_ROJA;
+                    badges.push({ text: "⚠️ Zona Riesgo", class: "active" });
+                }
+
+                let total = costo * multiplicador;
+                total = Math.round(total / 50) * 50;
+                if (total < TARIFA_BASE) total = TARIFA_BASE;
+
+                // Mostrar resultados
+                txtPrecio.textContent = `$${total}`;
+                statusContainer.innerHTML = "";
+                
+                if (badges.length > 0) {
+                    badges.forEach(b => {
+                        const span = document.createElement("span");
+                        span.className = `status-badge ${b.class}`;
+                        span.textContent = b.text;
+                        statusContainer.appendChild(span);
+                    });
+                } else {
+                    const span = document.createElement("span");
+                    span.className = "status-badge success";
+                    span.textContent = "✅ Tarifa Normal";
+                    statusContainer.appendChild(span);
+                }
+
+                // Mostrar área de precio y botón de WhatsApp
+                priceDisplay.classList.add("visible");
+                btnWhatsApp.style.display = "block";
+            }
+
+            function enviarPedidoWhatsApp() {
+                const origen = origenInput.value.trim();
+                const destino = destinoInput.value.trim();
+                const precio = txtPrecio.textContent;
+
+                const mensaje = encodeURIComponent(
+                    `*⚡ SOLICITUD DE COTIZACIÓN CON DESCUENTO ⚡*\n\n` +
+                    `📍 *Origen:* ${origen}\n` +
+                    `🏁 *Destino:* ${destino}\n\n` +
+                    `💵 *Precio estimado visible:* ${precio}\n\n` +
+                    `🚀 *Solicito aplicar mi descuento progresivo (5%, 10%, 15% o 20%)*.\n` +
+                    `¡Espero su confirmación del precio final!`
+                );
+
+                window.open(`https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`, "_blank");
+            }
+
+            btnCalcular.addEventListener("click", calcularPrecio);
+            btnWhatsApp.addEventListener("click", enviarPedidoWhatsApp);
+        });
+    </script>
 </body>
     </html>
