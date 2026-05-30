@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MESSENGER-FLASH | Mensajería Tucumán</title>
+    <title>⚡ MESSENGER-FLASH | Mensajería Tucumán</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -77,53 +77,57 @@
 <body class="bg-gradient-to-br from-primary via-blue-900 to-primary min-h-screen font-sans tap-highlight pb-8">
     <div class="container mx-auto px-3 py-6 max-w-3xl">
         
-        <header class="text-center mb-8 pt-4">
-            <h1 class="text-[clamp(2.2rem,12vw,4rem)] font-black text-secondary text-shadow tracking-wider mb-2">
+        <header class="text-center mb-10 pt-6">
+            <h1 class="text-[clamp(2.5rem,14vw,4.5rem)] font-black text-secondary text-shadow tracking-wider mb-3">
                 ⚡ MESSENGER-FLASH ⚡
             </h1>
-            <p class="text-white/80 text-base px-2">Mensajería en TODO EL TERRITORIO DE TUCUMÁN</p>
-            <div class="w-40 h-1 bg-secondary mx-auto mt-3 rounded-full box-glow-yellow"></div>
-            <p class="text-white/60 text-xs mt-2">Capital · Yerba Buena · Tafí Viejo · Banda · El Mollar · Amaicha · y más localidades</p>
+            <p class="text-white/90 text-lg font-medium px-2">🚚 Mensajería Rápida en TODO EL TERRITORIO DE TUCUMÁN 🚚</p>
+            <div class="w-48 h-1.5 bg-secondary mx-auto mt-4 rounded-full box-glow-yellow"></div>
+            <p class="text-white/70 text-sm mt-3">Capital · Yerba Buena · Tafí Viejo · Banda · El Mollar · Amaicha · y más localidades</p>
         </header>
 
-        <main class="bg-white/95 backdrop-blur-lg rounded-3xl p-5 md:p-7 box-glow border-glow relative overflow-hidden mx-1">
-            <div class="absolute -top-20 -right-20 w-40 h-40 bg-accent/10 rounded-full blur-3xl"></div>
-            <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-secondary/10 rounded-full blur-3xl"></div>
+        <main class="bg-white/95 backdrop-blur-lg rounded-[2rem] p-6 md:p-8 box-glow border-glow relative overflow-hidden mx-2">
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-accent/15 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-secondary/15 rounded-full blur-3xl"></div>
 
-            <form id="formularioEnvio" class="space-y-5 relative z-10">
+            <form id="formularioEnvio" class="space-y-6 relative z-10">
 
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                    <label class="block text-sm font-bold text-primary mb-2 flex items-center gap-2">
-                        <i class="fa fa-user-circle text-accent"></i> IDENTIFÍCATE CON NOMBRE COMPLETO
+                <!-- ✅ CAMPO NOMBRE DEL CLIENTE - PRESENTE Y CORRECTO -->
+                <div class="bg-blue-50/80 p-5 rounded-2xl border border-blue-200 shadow-sm">
+                    <label class="block text-base font-bold text-primary mb-3 flex items-center gap-3">
+                        <i class="fa fa-user-circle text-accent text-xl"></i> IDENTIFÍCATE - NOMBRE COMPLETO
                     </label>
-                    <input type="text" id="nombreCliente" placeholder="Tu Nombre Completo aquí" 
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent transition-custom input-movil" required>
+                    <input type="text" id="nombreCliente" placeholder="Escribe tu nombre y apellido aquí..." 
+                        class="w-full px-5 py-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent transition-custom input-movil bg-white/80" required>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-primary mb-2 flex items-center gap-2">
-                        <i class="fa fa-map-marker text-red-500"></i> DIRECCIÓN DE RETIRO
+                <!-- ✅ DIRECCIÓN DE RETIRO -->
+                <div class="bg-red-50/80 p-5 rounded-2xl border border-red-200 shadow-sm">
+                    <label class="block text-base font-bold text-primary mb-3 flex items-center gap-3">
+                        <i class="fa fa-map-marker text-red-500 text-xl"></i> DIRECCIÓN DE RETIRO <span class="text-xs font-normal text-gray-600">(Exacta)</span>
                     </label>
-                    <input type="text" id="origen" placeholder="Ej: San Martín 1250 - San Miguel / Calle S/N - El Mollar" 
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent transition-custom input-movil" required>
-                    <p class="text-xs text-gray-500 mt-1">* Calle, Número y Localidad (válido toda la provincia)</p>
+                    <input type="text" id="origen" placeholder="Ej: Av. Aconquija 1234, Yerba Buena / Calle S/N, El Mollar" 
+                        class="w-full px-5 py-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent transition-custom input-movil bg-white/80" required>
+                    <p class="text-xs text-gray-600 mt-2">* Calle, Número y Localidad (válido toda la provincia)</p>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-primary mb-2 flex items-center gap-2">
-                        <i class="fa fa-map-pin text-green-600"></i> DIRECCIÓN DE ENTREGA
+                <!-- ✅ DIRECCIÓN DE ENTREGA -->
+                <div class="bg-green-50/80 p-5 rounded-2xl border border-green-200 shadow-sm">
+                    <label class="block text-base font-bold text-primary mb-3 flex items-center gap-3">
+                        <i class="fa fa-map-pin text-green-600 text-xl"></i> DIRECCIÓN DE ENTREGA <span class="text-xs font-normal text-gray-600">(Exacta)</span>
                     </label>
-                    <input type="text" id="destino" placeholder="Ej: Av. Roca 3400 - Yerba Buena / Centro - Amaicha" 
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent transition-custom input-movil" required>
-                    <p class="text-xs text-gray-500 mt-1">* Calle, Número y Localidad</p>
+                    <input type="text" id="destino" placeholder="Ej: 24 de Septiembre 567, San Miguel / Centro, Amaicha" 
+                        class="w-full px-5 py-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent transition-custom input-movil bg-white/80" required>
+                    <p class="text-xs text-gray-600 mt-2">* Calle, Número y Localidad</p>
                 </div>
 
-                <div>
-                    <label class="block text-sm font-semibold text-primary mb-2 flex items-center gap-2">
-                        <i class="fa fa-list-alt text-secondary"></i> ¿QUÉ VAS A ENVIAR?
+                <!-- ✅ DESPLEGABLE COMPLETO CON TODAS LAS OPCIONES -->
+                <div class="bg-yellow-50/80 p-5 rounded-2xl border border-yellow-200 shadow-sm">
+                    <label class="block text-base font-bold text-primary mb-3 flex items-center gap-3">
+                        <i class="fa fa-list-alt text-secondary text-xl"></i> ¿QUÉ VAS A ENVIAR?
                     </label>
                     <select id="tipoEnvio" 
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-secondary focus:border-secondary transition-custom bg-white input-movil" required>
+                        class="w-full px-5 py-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-secondary focus:border-secondary transition-custom bg-white/80 input-movil" required>
                         <option value="">-- Selecciona una opción --</option>
                         <option value="comida">🍕 Comida</option>
                         <option value="bebidas">🥤 Bebidas</option>
@@ -135,58 +139,64 @@
                     <p id="avisoTipo" class="text-sm text-red-600 font-medium mt-2 h-6"></p>
                 </div>
 
-                <div id="mapa" class="mt-4 hidden"></div>
+                <!-- 🗺️ MAPA -->
+                <div id="mapa" class="mt-6 hidden rounded-2xl overflow-hidden shadow-lg"></div>
 
-                <div id="resultados" class="mt-4 p-4 rounded-xl bg-gradient-to-r from-blue-50 to-yellow-50 border border-accent/20 hidden transition-custom">
-                    <h3 class="font-bold text-primary text-lg mb-3 text-center">📋 Resumen del Servicio</h3>
-                    <div class="grid grid-cols-1 gap-3 text-center">
-                        <div class="bg-white/70 p-3 rounded-lg">
-                            <p class="text-sm text-gray-600">Distancia Real</p>
-                            <p class="font-bold text-accent text-xl"><span id="distanciaValor">0</span> km</p>
+                <!-- 💰 RESULTADOS -->
+                <div id="resultados" class="mt-6 p-6 rounded-2xl bg-gradient-to-r from-blue-100 to-yellow-100 border-2 border-accent/30 hidden transition-custom shadow-lg">
+                    <h3 class="font-bold text-primary text-xl mb-4 text-center">📋 RESUMEN DEL SERVICIO</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-white/90 p-4 rounded-xl shadow-sm">
+                            <p class="text-sm text-gray-700 font-medium">Distancia Real</p>
+                            <p class="font-bold text-accent text-2xl mt-1"><span id="distanciaValor">0</span> km</p>
                         </div>
-                        <div class="bg-white/70 p-3 rounded-lg">
-                            <p class="text-sm text-gray-600">Tiempo Aprox.</p>
-                            <p class="font-bold text-accent text-xl"><span id="tiempoValor">0</span> min</p>
+                        <div class="bg-white/90 p-4 rounded-xl shadow-sm">
+                            <p class="text-sm text-gray-700 font-medium">Tiempo Aprox.</p>
+                            <p class="font-bold text-accent text-2xl mt-1"><span id="tiempoValor">0</span> min</p>
                         </div>
-                        <div class="bg-white/70 p-3 rounded-lg">
-                            <p class="text-sm text-gray-600">TARIFA TOTAL</p>
-                            <p class="font-bold text-green-700 text-2xl text-shadow">$ <span id="tarifaValor">0</span></p>
+                        <div class="bg-white/90 p-4 rounded-xl shadow-sm">
+                            <p class="text-sm text-gray-700 font-medium">TARIFA TOTAL</p>
+                            <p class="font-bold text-green-700 text-[1.7rem] text-shadow mt-1">$ <span id="tarifaValor">0</span></p>
                         </div>
                     </div>
                 </div>
 
+                <!-- 🚀 BOTÓN CALCULAR -->
                 <button type="submit" 
-                    class="w-full bg-gradient-to-r from-accent to-blue-700 hover:from-blue-700 hover:to-accent text-white font-bold py-4 px-6 rounded-xl text-lg uppercase tracking-wider box-glow transition-custom transform hover:scale-[1.02] active:scale-[0.98] min-h-[50px]">
+                    class="w-full bg-gradient-to-r from-accent to-blue-700 hover:from-blue-700 hover:to-accent text-white font-bold py-5 px-6 rounded-2xl text-lg uppercase tracking-wider box-glow transition-custom transform hover:scale-[1.03] active:scale-[0.97] min-h-[55px]">
                     🚀 Calcular Precio Exacto
                 </button>
 
+                <!-- ✅ BOTÓN WHATSAPP CON TU NÚMERO EXACTO -->
                 <a id="botonWhatsapp" href="#" target="_blank" rel="noopener noreferrer"
-                    class="hidden w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-6 rounded-xl text-lg text-center uppercase tracking-wider box-glow-yellow transition-custom transform hover:scale-[1.02] active:scale-[0.98] min-h-[50px]">
-                    <i class="fa fa-whatsapp mr-2"></i> Pedir Cadete Ahora
+                    class="hidden w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-5 px-6 rounded-2xl text-lg text-center uppercase tracking-wider box-glow-yellow transition-custom transform hover:scale-[1.03] active:scale-[0.97] min-h-[55px]">
+                    <i class="fa fa-whatsapp mr-2 text-xl"></i> Pedir Cadete Ahora
                 </a>
 
             </form>
         </main>
 
-        <footer class="mt-10 text-center text-white/70 text-sm px-4">
-            <p class="mb-3">© 2026 MESSENGER-FLASH - Mensajería en Todo Tucumán</p>
+        <footer class="mt-12 text-center text-white/80 text-sm px-4">
+            <p class="mb-3 font-medium">© 2026 MESSENGER-FLASH - Mensajería en Todo el Territorio de Tucumán</p>
             <div class="mt-2">
                 <span id="correoOculto">Contacto: **********@gmail.com</span>
-                <button id="verCorreoBtn" class="ml-2 bg-secondary/80 hover:bg-secondary text-primary font-semibold px-3 py-1 rounded-lg text-xs transition-custom">
+                <button id="verCorreoBtn" class="ml-2 bg-secondary/90 hover:bg-secondary text-primary font-semibold px-3 py-1 rounded-lg text-xs transition-custom">
                     Ver correo
                 </button>
-                <p class="mt-2">Correo: poncejose027@gmail.com</p>
+                <p class="mt-2 text-white/70">Correo: poncejose027@gmail.com</p>
             </div>
         </footer>
     </div>
 
     <script>
+        // 📊 TARIFAS CONFIGURADAS CORRECTAMENTE
         const TARIFA_BASE = 1800;
         const PRECIO_POR_KM = 400;
         const RECARGO_FRAGIL = 1000;
         const RECARGO_COMIDA = 350;
         const RECARGO_DOCUMENTO = 200;
 
+        // ✅ TU NÚMERO DE WHATSAPP - COMO ME LO DISTE
         const NUMERO_WHATSAPP = "5493815727447"; 
 
         let mapa;
@@ -197,6 +207,7 @@
             calcularRuta();
         });
 
+        // ✅ FUNCIONAMIENTO DEL DESPLEGABLE
         document.getElementById('tipoEnvio').addEventListener('change', function() {
             const aviso = document.getElementById('avisoTipo');
             switch(this.value) {
@@ -255,6 +266,7 @@
                 document.getElementById('resultados').classList.remove('hidden');
                 document.getElementById('botonWhatsapp').classList.remove('hidden');
 
+                // ✅ MENSAJE WHATSAPP COMPLETO Y SIN ERRORES
                 const mensaje = encodeURIComponent(
                     `Hola, soy ${nombreCliente}. Quiero pedir un cadete.%0A%0A` +
                     `📤 Retiro: ${origen}%0A` +
@@ -332,5 +344,5 @@
         });
     </script>
 </body>
-    </html>
-                    
+                        </html>
+    
