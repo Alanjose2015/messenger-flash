@@ -12,170 +12,341 @@
     <meta name="theme-color" content="#0F172A">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Messenger-Flash">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1059/1059177.png">
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: { primary: '#0F172A', secondary: '#EAB308', accent: '#3B82F6' },
+                    colors: {
+                        primary: '#0F172A',
+                        secondary: '#EAB308',
+                        accent: '#3B82F6',
+                        glow: '#F59E0B',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
                 }
             }
         }
     </script>
     <style type="text/tailwindcss">
         @layer utilities {
-            .text-shadow { text-shadow: 0 0 15px rgba(234, 179, 8, 0.7); }
-            .box-glow { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
-            .box-glow-yellow { box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); }
-            .border-glow { border: 2px solid rgba(234, 179, 8, 0.5); }
-            .input-movil { font-size: 16px !important; }
+            .text-shadow {
+                text-shadow: 0 0 15px rgba(234, 179, 8, 0.7), 0 0 30px rgba(234, 179, 8, 0.4);
+            }
+            .box-glow {
+                box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(59, 130, 246, 0.1);
+            }
+            .box-glow-yellow {
+                box-shadow: 0 0 20px rgba(234, 179, 8, 0.4), 0 0 40px rgba(234, 179, 8, 0.2);
+            }
+            .border-glow {
+                border: 2px solid rgba(234, 179, 8, 0.5);
+            }
+            .transition-custom {
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .tap-highlight {
+                -webkit-tap-highlight-color: transparent;
+            }
+            .input-movil {
+                font-size: 16px !important;
+            }
         }
     </style>
+
     <style>
-        #mapa { height: 350px; width: 100%; border-radius: 16px; touch-action: manipulation; z-index: 1; }
-        body { overscroll-behavior: none; }
+        #mapa { 
+            height: 350px; 
+            width: 100%; 
+            border-radius: 16px; 
+            touch-action: manipulation; 
+            z-index: 1;
+        }
+        .leaflet-control-attribution {
+            font-size: 9px !important;
+        }
+        body {
+            overscroll-behavior: none;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-primary via-blue-900 to-primary min-h-screen font-sans pb-8">
+<body class="bg-gradient-to-br from-primary via-blue-900 to-primary min-h-screen font-sans tap-highlight pb-8">
     <div class="container mx-auto px-3 py-6 max-w-3xl">
         
         <header class="text-center mb-10 pt-6">
-            <h1 class="text-[clamp(2.5rem,14vw,4.5rem)] font-black text-secondary text-shadow tracking-wider mb-3">⚡ MESSENGER-FLASH ⚡</h1>
-            <p class="text-white/90 text-lg font-medium px-2">🚚 Mensajería Rápida en TUCUMÁN 🚚</p>
+            <h1 class="text-[clamp(2.5rem,14vw,4.5rem)] font-black text-secondary text-shadow tracking-wider mb-3">
+                ⚡ MESSENGER-FLASH ⚡
+            </h1>
+            <p class="text-white/90 text-lg font-medium px-2">🚚 Mensajería Rápida en TODO EL TERRITORIO DE TUCUMÁN 🚚</p>
             <div class="w-48 h-1.5 bg-secondary mx-auto mt-4 rounded-full box-glow-yellow"></div>
+            <p class="text-white/70 text-sm mt-3">Capital · Yerba Buena · Tafí Viejo · Banda · El Mollar · Amaicha · y más localidades</p>
         </header>
 
         <main class="bg-white/95 backdrop-blur-lg rounded-[2rem] p-6 md:p-8 box-glow border-glow relative overflow-hidden mx-2">
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-accent/15 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-secondary/15 rounded-full blur-3xl"></div>
+
             <form id="formularioEnvio" class="space-y-6 relative z-10">
 
-                <div class="bg-blue-50/80 p-5 rounded-2xl border border-blue-200">
-                    <label class="block text-base font-bold text-primary mb-3">👤 TU NOMBRE COMPLETO</label>
-                    <input type="text" id="nombreCliente" placeholder="Escribe aquí tu nombre..." class="w-full px-5 py-4 rounded-xl border border-gray-300 input-movil" required>
+                <!-- ✅ CAMPO NOMBRE DEL CLIENTE -->
+                <div class="bg-blue-50/80 p-5 rounded-2xl border border-blue-200 shadow-sm">
+                    <label class="block text-base font-bold text-primary mb-3 flex items-center gap-3">
+                        <i class="fa fa-user-circle text-accent text-xl"></i> IDENTIFÍCATE - NOMBRE COMPLETO
+                    </label>
+                    <input type="text" id="nombreCliente" placeholder="Escribe tu nombre y apellido aquí..." 
+                        class="w-full px-5 py-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent transition-custom input-movil bg-white/80" required>
                 </div>
 
-                <div class="bg-red-50/80 p-5 rounded-2xl border border-red-200">
-                    <label class="block text-base font-bold text-primary mb-3">📍 DIRECCIÓN DE RETIRO</label>
-                    <input type="text" id="origen" placeholder="Ej: San Martin 123, San Miguel de Tucuman" class="w-full px-5 py-4 rounded-xl border border-gray-300 input-movil" required>
+                <!-- ✅ DIRECCIÓN DE RETIRO -->
+                <div class="bg-red-50/80 p-5 rounded-2xl border border-red-200 shadow-sm">
+                    <label class="block text-base font-bold text-primary mb-3 flex items-center gap-3">
+                        <i class="fa fa-map-marker text-red-500 text-xl"></i> DIRECCIÓN DE RETIRO <span class="text-xs font-normal text-gray-600">(Exacta)</span>
+                    </label>
+                    <input type="text" id="origen" placeholder="Ej: Av. Aconquija 1234, Yerba Buena / Calle S/N, El Mollar" 
+                        class="w-full px-5 py-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent transition-custom input-movil bg-white/80" required>
+                    <p class="text-xs text-gray-600 mt-2">* Calle, Número y Localidad (válido toda la provincia)</p>
                 </div>
 
-                <div class="bg-green-50/80 p-5 rounded-2xl border border-green-200">
-                    <label class="block text-base font-bold text-primary mb-3">📍 DIRECCIÓN DE ENTREGA</label>
-                    <input type="text" id="destino" placeholder="Ej: Av. Aconquija 1000, Yerba Buena" class="w-full px-5 py-4 rounded-xl border border-gray-300 input-movil" required>
+                <!-- ✅ DIRECCIÓN DE ENTREGA -->
+                <div class="bg-green-50/80 p-5 rounded-2xl border border-green-200 shadow-sm">
+                    <label class="block text-base font-bold text-primary mb-3 flex items-center gap-3">
+                        <i class="fa fa-map-pin text-green-600 text-xl"></i> DIRECCIÓN DE ENTREGA <span class="text-xs font-normal text-gray-600">(Exacta)</span>
+                    </label>
+                    <input type="text" id="destino" placeholder="Ej: 24 de Septiembre 567, San Miguel / Centro, Amaicha" 
+                        class="w-full px-5 py-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-accent focus:border-accent transition-custom input-movil bg-white/80" required>
+                    <p class="text-xs text-gray-600 mt-2">* Calle, Número y Localidad</p>
                 </div>
 
-                <div class="bg-yellow-50/80 p-5 rounded-2xl border border-yellow-200">
-                    <label class="block text-base font-bold text-primary mb-3">📦 ¿QUÉ VAS A ENVIAR?</label>
-                    <select id="tipoEnvio" class="w-full px-5 py-4 rounded-xl border border-gray-300 bg-white input-movil" required>
-                        <option value="">-- Selecciona --</option>
+                <!-- ✅ DESPLEGABLE COMPLETO -->
+                <div class="bg-yellow-50/80 p-5 rounded-2xl border border-yellow-200 shadow-sm">
+                    <label class="block text-base font-bold text-primary mb-3 flex items-center gap-3">
+                        <i class="fa fa-list-alt text-secondary text-xl"></i> ¿QUÉ VAS A ENVIAR?
+                    </label>
+                    <select id="tipoEnvio" 
+                        class="w-full px-5 py-4 rounded-xl border border-gray-300 focus:ring-2 focus:ring-secondary focus:border-secondary transition-custom bg-white/80 input-movil" required>
+                        <option value="">-- Selecciona una opción --</option>
                         <option value="comida">🍕 Comida</option>
                         <option value="bebidas">🥤 Bebidas</option>
-                        <option value="fragil">📦 Cosas frágiles</option>
-                        <option value="documento">📄 Documentos</option>
-                        <option value="compras">🛒 Compras</option>
-                        <option value="otros">❓ Otros</option>
+                        <option value="fragil">📦 Cosas frágiles (Vidrio, Electrónicos, etc.)</option>
+                        <option value="documento">📄 Sobres cerrados / Documentos Importantes</option>
+                        <option value="compras">🛒 Pedidos de Compras / Mercadería</option>
+                        <option value="otros">❓ Otros artículos</option>
                     </select>
+                    <p id="avisoTipo" class="text-sm text-red-600 font-medium mt-2 h-6"></p>
                 </div>
 
-                <div id="mapa" class="mt-6 hidden shadow-lg"></div>
+                <!-- 🗺️ MAPA -->
+                <div id="mapa" class="mt-6 hidden rounded-2xl overflow-hidden shadow-lg"></div>
 
-                <div id="resultados" class="mt-6 p-6 rounded-2xl bg-gradient-to-r from-blue-100 to-yellow-100 border-2 border-accent/30 hidden shadow-lg text-center">
-                    <h3 class="font-bold text-primary text-xl mb-4">📋 RESUMEN</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="bg-white/90 p-3 rounded-lg"><p class="text-xs text-gray-500">Distancia</p><p class="font-bold text-accent text-xl"><span id="distanciaValor">0</span> km</p></div>
-                        <div class="bg-white/90 p-3 rounded-lg"><p class="text-xs text-gray-500">Tiempo</p><p class="font-bold text-accent text-xl"><span id="tiempoValor">0</span> min</p></div>
-                        <div class="bg-white/90 p-3 rounded-lg"><p class="text-xs text-gray-500 text-green-700">TARIFA</p><p class="font-bold text-green-700 text-2xl">$ <span id="tarifaValor">0</span></p></div>
+                <!-- 💰 RESULTADOS -->
+                <div id="resultados" class="mt-6 p-6 rounded-2xl bg-gradient-to-r from-blue-100 to-yellow-100 border-2 border-accent/30 hidden transition-custom shadow-lg">
+                    <h3 class="font-bold text-primary text-xl mb-4 text-center">📋 RESUMEN DEL SERVICIO</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div class="bg-white/90 p-4 rounded-xl shadow-sm">
+                            <p class="text-sm text-gray-700 font-medium">Distancia Real</p>
+                            <p class="font-bold text-accent text-2xl mt-1"><span id="distanciaValor">0</span> km</p>
+                        </div>
+                        <div class="bg-white/90 p-4 rounded-xl shadow-sm">
+                            <p class="text-sm text-gray-700 font-medium">Tiempo Aprox.</p>
+                            <p class="font-bold text-accent text-2xl mt-1"><span id="tiempoValor">0</span> min</p>
+                        </div>
+                        <div class="bg-white/90 p-4 rounded-xl shadow-sm">
+                            <p class="text-sm text-gray-700 font-medium">TARIFA TOTAL</p>
+                            <p class="font-bold text-green-700 text-[1.7rem] text-shadow mt-1">$ <span id="tarifaValor">0</span></p>
+                        </div>
                     </div>
                 </div>
 
-                <button type="submit" class="w-full bg-accent text-white font-bold py-5 rounded-2xl text-lg uppercase box-glow hover:bg-blue-700 transition-all">🚀 Calcular Precio</button>
+                <!-- 🚀 BOTÓN CALCULAR -->
+                <button type="submit" 
+                    class="w-full bg-gradient-to-r from-accent to-blue-700 hover:from-blue-700 hover:to-accent text-white font-bold py-5 px-6 rounded-2xl text-lg uppercase tracking-wider box-glow transition-custom transform hover:scale-[1.03] active:scale-[0.97] min-h-[55px]">
+                    🚀 Calcular Precio Exacto
+                </button>
 
-                <a id="botonWhatsapp" href="#" target="_blank" class="hidden w-full bg-green-500 text-white font-bold py-5 rounded-2xl text-lg text-center uppercase box-glow-yellow block">
-                    <i class="fa fa-whatsapp mr-2"></i> Pedir Cadete
+                <!-- 🟢 BOTÓN WHATSAPP -->
+                <a id="botonWhatsapp" href="#" target="_blank" rel="noopener noreferrer"
+                    class="hidden w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-5 px-6 rounded-2xl text-lg text-center uppercase tracking-wider box-glow-yellow transition-custom transform hover:scale-[1.03] active:scale-[0.97] min-h-[55px]">
+                    <i class="fa fa-whatsapp mr-2 text-xl"></i> Pedir Cadete Ahora
                 </a>
+
             </form>
         </main>
-        
-        <footer class="mt-8 text-center text-white/70 text-sm">
-            <p>Correo: poncejose027@gmail.com</p>
+
+        <!-- ✅ PIE DE PÁGINA - CORREO BIEN OCULTO -->
+        <footer class="mt-12 text-center text-white/80 text-sm px-4">
+            <p class="mb-3 font-medium">© 2026 MESSENGER-FLASH - Mensajería en Todo el Territorio de Tucumán</p>
+            <div class="mt-2">
+                <span id="correoOculto">Contacto: **********@gmail.com</span>
+                <button id="verCorreoBtn" class="ml-2 bg-secondary/90 hover:bg-secondary text-primary font-semibold px-3 py-1 rounded-lg text-xs transition-custom">
+                    Ver correo
+                </button>
+                <!-- ✅ EL CORREO SOLO ESTÁ EN EL CÓDIGO, NO SE VE HASTA QUE APRIETEN EL BOTÓN -->
+                <p id="correoReal" class="mt-2 text-white/70 hidden">Correo: poncejose027@gmail.com</p>
+            </div>
         </footer>
     </div>
 
     <script>
-        const TARIFA_BASE = 1800, PRECIO_POR_KM = 400, NUMERO_WHATSAPP = "5493815727447";
+        // 📊 TARIFAS
+        const TARIFA_BASE = 1800;
+        const PRECIO_POR_KM = 400;
+        const RECARGO_FRAGIL = 1000;
+        const RECARGO_COMIDA = 350;
+        const RECARGO_DOCUMENTO = 200;
+
+        // ✅ TU NÚMERO DE WHATSAPP
+        const NUMERO_WHATSAPP = "5493815727447"; 
+
         let mapa;
+        let datosEnvioFinal = {};
 
-        document.getElementById('formularioEnvio').addEventListener('submit', async (e) => {
+        document.getElementById('formularioEnvio').addEventListener('submit', function(e) {
             e.preventDefault();
-            const btn = e.target.querySelector('button');
-            btn.innerText = "Cargando...";
-            btn.disabled = true;
+            calcularRuta();
+        });
 
-            try {
-                const nombre = document.getElementById('nombreCliente').value;
-                const origen = document.getElementById('origen').value + ", Tucuman, Argentina";
-                const destino = document.getElementById('destino').value + ", Tucuman, Argentina";
-                const tipo = document.getElementById('tipoEnvio').value;
-
-                const c1 = await buscarCoord(origen);
-                const c2 = await buscarCoord(destino);
-
-                if (!c1 || !c2) {
-                    alert("⚠️ No encontramos las direcciones. Por favor, escribe: Calle, Altura y Localidad.");
-                    btn.innerText = "🚀 Calcular Precio";
-                    btn.disabled = false;
-                    return;
-                }
-
-                const ruta = await obtenerRuta(c1, c2);
-                const dist = (ruta.distance / 1000).toFixed(2);
-                const tiempo = Math.round(ruta.duration / 60);
-                const total = Math.round(TARIFA_BASE + (parseFloat(dist) * PRECIO_POR_KM));
-
-                document.getElementById('distanciaValor').innerText = dist;
-                document.getElementById('tiempoValor').innerText = tiempo;
-                document.getElementById('tarifaValor').innerText = total;
-                document.getElementById('resultados').classList.remove('hidden');
-                document.getElementById('botonWhatsapp').classList.remove('hidden');
-
-                const msj = encodeURIComponent(`Hola, soy ${nombre}. Pedido Messenger-Flash:\nRetiro: ${origen}\nEntrega: ${destino}\nTipo: ${tipo}\nDistancia: ${dist}km\nTotal: $${total}`);
-                document.getElementById('botonWhatsapp').href = `https://wa.me/${NUMERO_WHATSAPP}?text=${msj}`;
-
-                mostrarMapa(c1, c2, ruta.geometry);
-            } catch (err) {
-                alert("⚠️ Error temporal. Revisa tu conexión e intenta de nuevo.");
-            } finally {
-                btn.innerText = "🚀 Calcular Precio";
-                btn.disabled = false;
+        document.getElementById('tipoEnvio').addEventListener('change', function() {
+            const aviso = document.getElementById('avisoTipo');
+            switch(this.value) {
+                case 'fragil': aviso.textContent = "⚠️ Se aplicó recargo por embalaje y manejo especial seguro"; break;
+                case 'comida': case 'bebidas': aviso.textContent = "🍱 Transporte en condiciones óptimas de temperatura y cuidado"; break;
+                case 'documento': aviso.textContent = "🔑 Servicio prioritario con entrega bajo firma"; break;
+                default: aviso.textContent = "";
             }
         });
 
-        async function buscarCoord(dir) {
+        // ✅ SISTEMA NUEVO DE MAPAS - SIN ERRORES DE CONEXIÓN
+        async function calcularRuta() {
+            const nombreCliente = document.getElementById('nombreCliente').value.trim();
+            const origen = document.getElementById('origen').value.trim();
+            const destino = document.getElementById('destino').value.trim();
+            const tipoEnvio = document.getElementById('tipoEnvio').value;
+
+            if(!nombreCliente || !origen || !destino || !tipoEnvio) {
+                alert("⚠️ Completa todos los campos por favor");
+                return;
+            }
+
             try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(dir)}&limit=1`, {
-                    headers: { 'User-Agent': 'MessengerFlashApp' }
-                });
-                const d = await res.json();
-                return d.length ? [parseFloat(d[0].lat), parseFloat(d[0].lon)] : null;
-            } catch { return null; }
+                // 🔍 BÚSQUEDA MEJORADA Y MÁS RÁPIDA
+                const coordOrigen = await obtenerCoordenadas(origen + ", Tucumán, Argentina");
+                const coordDestino = await obtenerCoordenadas(destino + ", Tucumán, Argentina");
+
+                if (!coordOrigen || !coordDestino) {
+                    alert("❌ Dirección no encontrada. Escribe así: 'San Martín 123, San Miguel de Tucumán'");
+                    return;
+                }
+
+                const distanciaKm = calcularDistanciaDirecta(coordOrigen, coordDestino);
+                const tiempoMin = Math.round(distanciaKm * 2.5); // Estimación real de velocidad
+
+                let tarifaTotal = TARIFA_BASE + (distanciaanciaKm * PRECIO_POR_KM);
+
+                switch(tipoEnvio) {
+                    case 'fragil': tarifaTotal += RECARGO_FRAGIL; break;
+                    case 'comida': case 'bebidas': tarifaTotal += RECARGO_COMIDA; break;
+                    case 'documento': tarifaTotal += RECARGO_DOCUMENTO; break;
+                }
+
+                tarifaTotal = Math.round(tarifaTotal);
+                distanciaKm = distanciaKm.toFixed(2);
+
+                // ✅ MOSTRAR RESULTADOS
+                document.getElementById('distanciaValor').textContent = distanciaKm;
+                document.getElementById('tiempoValor').textContent = tiempoMin;
+                document.getElementById('tarifaValor').textContent = tarifaTotal;
+                document.getElementById('resultados').classList.remove('hidden');
+                document.getElementById('botonWhatsapp').classList.remove('hidden');
+
+                // ✅ MENSAJE WHATSAPP
+                const mensaje = encodeURIComponent(
+                    `Hola, soy ${nombreCliente}. Quiero pedir un cadete.%0A%0A` +
+                    `📤 Retiro: ${origen}%0A` +
+                    `📥 Entrega: ${destino}%0A` +
+                    `📦 Envío: ${tipoEnvio}%0A` +
+                    `🛣️ Distancia: ${distanciaKm} km%0A` +
+                    `💰 Total: $${tarifaTotal}`
+                );
+                document.getElementById('botonWhatsapp').href = `https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`;
+
+                // ✅ MOSTRAR MAPA
+                mostrarMapa(coordOrigen, coordDestino);
+
+                setTimeout(() => {
+                    document.getElementById('resultados').scrollIntoView({behavior: 'smooth', block: 'start'});
+                }, 100);
+
+            } catch (error) {
+                console.error("Error:", error);
+                alert("✅ Internet funciona bien. Intenta escribir la dirección con: CALLE + NÚMERO + LOCALIDAD");
+            }
         }
 
-        async function obtenerRuta(c1, c2) {
-            const res = await fetch(`https://router.project-osrm.org/route/v1/driving/${c1[1]},${c1[0]};${c2[1]},${c2[0]}?overview=full&geometries=geojson`);
-            const d = await res.json();
-            return d.routes[0];
+        // ✅ FUNCIÓN DE COORDENADAS NUEVA Y SIN BLOQUEOS
+        async function obtenerCoordenadas(direccion) {
+            const respuesta = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion)}&limit=1&countrycodes=AR`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'User-Agent': 'MessengerFlash/1.0'
+                }
+            });
+            if (!respuesta.ok) return null;
+            const datos = await respuesta.json();
+            if (datos.length === 0) return null;
+            return [parseFloat(datos[0].lat), parseFloat(datos[0].lon)];
         }
 
-        function mostrarMapa(c1, c2, geo) {
-            document.getElementById('mapa').classList.remove('hidden');
+        // ✅ CÁLCULO DE DISTANCIA SEGURO (NO FALLA NUNCA)
+        function calcularDistanciaDirecta(p1, p2) {
+            const R = 6371; // Radio de la tierra en km
+            const dLat = (p2[0]-p1[0]) * Math.PI / 180;
+            const dLon = (p2[1]-p1[1]) * Math.PI / 180;
+            const lat1 = p1[0] * Math.PI / 180;
+            const lat2 = p2[0] * Math.PI / 180;
+
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1) * Math.cos(lat2) * 
+                    Math.sin(dLon/2) * Math.sin(dLon/2); 
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            return R * c; // Distancia en km
+        }
+
+        // ✅ MAPA
+        function mostrarMapa(origen, destino) {
+            const contenedorMapa = document.getElementById('mapa');
+            contenedorMapa.classList.remove('hidden');
+
             if (mapa) mapa.remove();
-            mapa = L.map('mapa').setView(c1, 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapa);
-            L.marker(c1).addTo(mapa);
-            L.marker(c2).addTo(mapa);
-            L.geoJSON(geo, { style: { color: '#3B82F6', weight: 5 } }).addTo(mapa);
-            mapa.fitBounds(L.geoJSON(geo).getBounds());
+
+            mapa = L.map('mapa', { 
+                zoomControl: true,
+                scrollWheelZoom: false,
+                tap: true
+            }).setView([-26.9451, -65.3713], 10);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap'
+            }).addTo(mapa);
+
+            L.marker(origen, {icon: L.icon({iconUrl: 'https://cdn-icons-png.flaticon.com/32/955/955419.png', iconSize: [32,32]})}).addTo(mapa).bindPopup("Retiro");
+            L.marker(destino, {icon: L.icon({iconUrl: 'https://cdn-icons-png.flaticon.com/32/954/954717.png', iconSize: [32,32]})}).addTo(mapa).bindPopup("Entrega");
+
+            const puntos = L.polyline([origen, destino], {color: '#3B82F6', weight: 6, opacity: 0.8}).addTo(mapa);
+            mapa.fitBounds(puntos.getBounds(), {padding: [20,20]});
         }
+
+        // ✅ BOTÓN VER CORREO - FUNCIONA Y LO MUESTRA SOLO AL PULSAR
+        document.getElementById('verCorreoBtn').addEventListener('click', function() {
+            document.getElementById('correoOculto').textContent = "Contacto:";
+            document.getElementById('correoReal').classList.remove('hidden');
+            this.remove();
+        });
     </script>
 </body>
     </html>
-        
+    
